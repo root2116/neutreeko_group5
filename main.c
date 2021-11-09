@@ -44,7 +44,7 @@ void parser(char* input, Move* move){
 
 /*ゲームが終わっているか判定する関数*/
 
-judge (int board[5][5]){
+int judge (int board[5][5]){
 
     /*黒をチェック*/
     int n = 1;  /*コマの色*/
@@ -90,12 +90,12 @@ judge (int board[5][5]){
     }
 
     /*  白をチェック*/
-    int n = 2;
-    int out = 2;
+    n = 2;
+    out = 2;
 
-    int tmp[3];
-    int c = 0;
-    int i, j;
+
+    c = 0;
+
     
     for (i = 0; i < 5; i += 1){
         for (j = 0; j < 5; j += 1){
@@ -106,7 +106,7 @@ judge (int board[5][5]){
         }
     }
 
-    int sa1, sa2;
+
     sa1 = tmp[1] - tmp[0];
     sa2 = tmp[2] - tmp[1];
 
