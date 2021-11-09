@@ -190,6 +190,36 @@ void update_turn(int* turn){
     }
 }
 
+
+void display_board(int board[][]) {
+  //読み込み
+  int width = 6;
+  char boardmap[width][width];
+  for (int i = 1; i < width; i++) {
+    boardmap[0][i] = '0' + i;
+    boardmap[i][0] = 'A' + i - 1;
+  }
+  
+  //新しいマップ
+  for (int i = 1; i < width; i++) {
+    for (int j = 1; j < width; j++) {
+      if (board[i - 1][j - 1] != '\0') {
+        boardmap[i][j] = '0' + board[i - 1][j - 1];
+      } else {
+        board[i][j] = ' ';
+      }
+    }
+  }
+
+  //プリント
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < width; j++) {
+      printf("%s|", boardmap[i][j]);
+    }
+    printf("\n");
+  }
+}
+
 int main(int argc,char *argv[]){
 
 
@@ -227,7 +257,6 @@ int main(int argc,char *argv[]){
 
     }
     
-
     
    
 
@@ -235,3 +264,4 @@ int main(int argc,char *argv[]){
 
     return 0;
 }
+
