@@ -152,12 +152,26 @@ int can_move(int board[5][5], Move move, int turn){
 
     //成分が互いに素であるベクトル
     Vector coprime_move_vec = { move_vec.x / vec_gcd ,move_vec.y / vec_gcd };
+        
+
+    
+    //縦横斜めのベクトルではなかったら動かせない.( (0,±1),(±1,0),(±1,±1)以外のベクトルの長さの２乗は2より大きくなる)
+    if(coprime_move_vec.x * coprime_move_vec.x + coprime_move_vec.y * coprime_move_vec.y > 2) return 0;
 
     int front_x = move.x1 + coprime_move_vec.x;
     int front_y = move.y1 + coprime_move_vec.y;
 
-    //縦横斜めのベクトルではなかったら動かせない.( (0,±1),(±1,0),(±1,±1)以外のベクトルの長さの２乗は2より大きくなる)
-    if(coprime_move_vec.x * coprime_move_vec.x + coprime_move_vec.y * coprime_move_vec.y > 2) return 0;
+    int scan_x = move.x0 + coprime_move_vec.x;
+    int scan_y = move.y0 + coprime_move_vec.y;
+
+    //射線上に駒がいたら動かせない
+    while(scan_x != move.x1 || scan_y != move.y1){
+        if(board[scan_y][scan_x] != 0) return 0;
+
+        scan_x += coprime_move_vec.x;
+        scan_y += coprime_move_vec.y;
+    }
+    
 
     //目の前が壁だったらOK
     if(front_x < 0 || front_x > 4 || front_y < 0 || front_y > 4){
@@ -182,7 +196,8 @@ int move_piece(int board[5][5], Move move,int turn){
     }
 }
 
-void update_turn(int* turn){
+void update_turn(int* turn,int* turn_count){
+    *turn_count = *turn_count + 1;
     if(*turn == 1){
         *turn = 2;
     }else{
@@ -191,33 +206,45 @@ void update_turn(int* turn){
 }
 
 
-void display_board(int board[][]) {
+void display_board(int board[5][5]) {
   //読み込み
   int width = 6;
   char boardmap[width][width];
+
+  boardmap[0][0] = ' ';
+
+  
+
   for (int i = 1; i < width; i++) {
-    boardmap[0][i] = '0' + i;
-    boardmap[i][0] = 'A' + i - 1;
+      boardmap[0][i] = 'A' + i - 1;
+      boardmap[i][0] = '6' - i;
   }
   
   //新しいマップ
   for (int i = 1; i < width; i++) {
     for (int j = 1; j < width; j++) {
-      if (board[i - 1][j - 1] != '\0') {
-        boardmap[i][j] = '0' + board[i - 1][j - 1];
-      } else {
-        board[i][j] = ' ';
+      if (board[i - 1][j - 1] == 1) {
+        boardmap[i][j] = 'O';
+      }else if(board[i - 1][j - 1] == 2){
+          boardmap[i][j] = '@';
+      }else {
+        boardmap[i][j] = ' ';
       }
     }
   }
 
   //プリント
+
+  printf("\n");
+
   for (int i = 0; i < width; i++) {
     for (int j = 0; j < width; j++) {
-      printf("%s|", boardmap[i][j]);
+      printf("%c|", boardmap[i][j]);
     }
     printf("\n");
   }
+
+  printf("\n");
 }
 
 int main(int argc,char *argv[]){
@@ -236,6 +263,7 @@ int main(int argc,char *argv[]){
     // 1: first player, 2: second player
     int user_num = atoi(argv[1]) + 1;
     int turn = 1;
+    int turn_count = 1;
 
     
     char input[5];
@@ -244,16 +272,37 @@ int main(int argc,char *argv[]){
     display_board(board);
 
     while(1){
+        
+        if(turn_count > 300){
+            printf("Draw");
+            break;
+        }
+
         scanf("%s", input);
         parser(input, &move);
 
+        
+
         if(move_piece(board,move,turn)){
+
             display_board(board);
-            update_turn(&turn);
+
+            if(judge(board) == turn && user_num == turn){
+                printf("You Win");
+                break;
+            }else if(judge(board) == turn && user_num != turn){
+                printf("You Lose");
+                break;
+            }
+            update_turn(&turn,&turn_count);
         }else{
-            printf("Invalid move!!");
+            printf("Invalid move!!\n");
             display_board(board);
         }
+
+
+
+
 
     }
     
