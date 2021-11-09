@@ -41,6 +41,104 @@ void parser(char* input, Move* move){
 }
 
 
+
+/*ゲームが終わっているか判定する関数*/
+
+judge (int board[5][5]){
+
+    /*黒をチェック*/
+    int n = 1;  /*コマの色*/
+    int out = 1;  /*返り値*/
+    
+    /*黒のコマがある場所を確認　（2次元配列を1次元に落としてます）*/
+    int tmp[3];
+    int c = 0;
+    int i, j;
+    
+    for (i = 0; i < 5; i += 1){
+        for (j = 0; j < 5; j += 1){
+            if (board[i][j] == n){
+                tmp[c] = 5*i + j;
+                c += 1;
+            }
+        }
+    }
+
+    int sa1, sa2;
+    sa1 = tmp[1] - tmp[0];
+    sa2 = tmp[2] - tmp[1];
+
+    if (sa1 == sa2){
+        if (sa1 == 1){/*横*/
+            if (tmp[0]/5 == tmp[1]/5 && tmp[1]/5 == tmp[2]/5){
+                return out;
+            }
+        }
+        if (sa1 == 5){/*縦*/
+            return out;
+        }
+        if (sa1 == 6){/*斜め　左上->右下*/
+            if (tmp[0]/5 + 1 == tmp[1]/5 && tmp[1]/5 + 1 == tmp[2]/5){
+                return out;
+            }
+        }
+        if (sa1 == 4){/*斜め　右上->左下*/
+            if (tmp[0]/5 + 1 == tmp[1]/5 && tmp[1]/5 + 1 == tmp[2]/5){
+                return out;
+            }
+        }
+    }
+
+    /*  白をチェック*/
+    int n = 2;
+    int out = 2;
+
+    int tmp[3];
+    int c = 0;
+    int i, j;
+    
+    for (i = 0; i < 5; i += 1){
+        for (j = 0; j < 5; j += 1){
+            if (board[i][j] == n){
+                tmp[c] = 5*i + j;
+                c += 1;
+            }
+        }
+    }
+
+    int sa1, sa2;
+    sa1 = tmp[1] - tmp[0];
+    sa2 = tmp[2] - tmp[1];
+
+    if (sa1 == sa2){
+        if (sa1 == 1){/*横*/
+            if (tmp[0]/5 == tmp[1]/5 && tmp[1]/5 == tmp[2]/5){
+                return out;
+            }
+        }
+        if (sa1 == 5){/*縦*/
+            return out;
+        }
+        if (sa1 == 6){/*斜め　左上->右下*/
+            if (tmp[0]/5 + 1 == tmp[1]/5 && tmp[1]/5 + 1 == tmp[2]/5){
+                return out;
+            }
+        }
+        if (sa1 == 4){/*斜め　右上->左下*/
+            if (tmp[0]/5 + 1 == tmp[1]/5 && tmp[1]/5 + 1 == tmp[2]/5){
+                return out;
+            }
+        }
+    
+    }
+    /*ゲーム継続*/
+    out = 0;
+    return out;
+}
+
+
+
+
 // 1 : 動かせる, 0: 動かせない
 int can_move(int board[5][5], Move move, int turn){
     //現在のターンの人が動かせる駒でなければ動かせない
