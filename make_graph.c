@@ -68,27 +68,48 @@ int hash_insert(DataItem **table, long int key, long int *data){
 
 }
 
-long int encode_board(int board[5][5]){
-    long int encoded = 0;
-    long int black = 0;
-    long int white = 0;
-    
-    for(int i = 0; i < 5; i++){
-        for(int j = 0; j < 5; j++){
-            if(board[i][j] == 1){
-                black *= 100;
-                black += 5*i + (j+1); 
-            }else if(board[i][j] == 2){
-                white *= 100;
-                white += 5*i + (j+1);
-            }
-        }
+int encode_board(int board[][5]) {
+  int komacount = 0;
+  int key;
+  int subkey1 = 0;
+  int subkey2 = 0;
+  
+  /*盤面に対して別々にエンコード*/
+  for (int i = 0; i < 5; i++) {
+    for (int j = 0; j < 5; j++) {
+      if (board[i][j] == 1) {
+        subkey1 += 2 ** (24 - (5 * i + j));
+        komacount++;
+      }
+      else if (board[i][j] == 2) {
+        subkey1 += 2 ** (24 - (5 * i + j));
+        subkey2 += 2 ** (5 - komacount);
+        komacount++;
+      } else {}
     }
+  }
+  
+  key = subkey1 * (2 ** 6) + subkey2;
+  return key;
+}
 
-    encoded = white * 1000000 + black;
+void decode_key(int key, int board[][5]) {
+  /*subkey2が黒白の順番、subkey1が駒のあるなし*/
+  int subkey2 = key % 64;
+  int subkey1 = key / 64;
 
-    return encoded;
-
+  for (int i = 24; i >= 0; i--) {
+    if ((subkey1 % 2) == 1) {
+      if ((subkey2 % 2) == 0) {
+        board[(i / 5)][(i % 5)] = 1;
+      } else {
+        board[(i / 5)][(i % 5)] = 2;
+      }
+      subkey2 /= 2;
+    } else {}
+    subkey1 /= 2;
+  }
+  return;
 }
 
 DataItem *table[SIZE];
