@@ -78,18 +78,18 @@ int encode_board(int board[][5]) {
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 5; j++) {
       if (board[i][j] == 1) {
-        subkey1 += 2 ** (24 - (5 * i + j));
+        subkey1 += 1 << (24 - (5 * i + j));
         komacount++;
       }
       else if (board[i][j] == 2) {
-        subkey1 += 2 ** (24 - (5 * i + j));
-        subkey2 += 2 ** (5 - komacount);
+        subkey1 += 1 << (24 - (5 * i + j));
+        subkey2 += 1 << (5 - komacount);
         komacount++;
       } else {}
     }
   }
   
-  key = subkey1 * (2 ** 6) + subkey2;
+  key = subkey1 * 64 + subkey2;
   return key;
 }
 
