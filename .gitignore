@@ -1,4 +1,8 @@
+*
+!*/
+!*.*
+
 .vscode
 *.dSYM
-main
-make_graph
+*.o
+*.dat

@@ -1,139 +1,263 @@
 
+#include "make_graph.h"
+#include "hash_table.h"
+#include "main.h"
+
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <errno.h>
 
-#define SIZE 3542009
+// long int to_int(int **board_array){
+//     long int board_num = 0;
 
+//     for(int i = 0; i < 6; i++){
+//         board_num += *board_array[i];
+//         board_num *= 100;
+//     }
 
-struct DataItem {
-    long int *data;
-    long int key;
-    struct DataItem *next;
-};
-typedef struct DataItem DataItem;
+//     return board_num;
+// }
 
-void hash_init(DataItem **table){
-    for (int i = 0; i < SIZE; i++){
-        table[i] = NULL;
-    }
-    return;
-}
-
-int get_hash_value(long int key){
-    return key % SIZE;
-}
-
-long int* hash_search(DataItem **table, long int key){
-    int hashval = get_hash_value(key);
-    DataItem *target = table[hashval];
-
-    for(; target != NULL; target = target->next){
-        if(target->key == key){
-            return target->data;
+void generate_board_from_array(int board[5][5], int **board_num_array){
+    
+    for(int i = 0; i < 5; i++){
+        for(int j = 0; j < 5; j++){
+            board[i][j] = 0;
         }
     }
 
-    return NULL;
-}
-
-
-
-int hash_insert(DataItem **table, long int key, long int *data){
-    DataItem *p = NULL;
-    int hashval = 0;
-
-    if (hash_search(table, key) != NULL){
-        fprintf(stderr, "key[%ld] is already exist in hash table.\n", key);
-        return (-1);
-    }
-
-    p = malloc(sizeof(DataItem));
-
-    if(p == NULL){
-        fprintf(stderr, "ERROR: %s(%d line)\n", strerror(errno), __LINE__);
-        return(-1);
-    }
-    p->key = key;
-    p->data = data;
-
-    
-    hashval = get_hash_value(key);
-    p->next = table[hashval];
-    table[hashval] = p;
-
-    return 0;
-
+    int x,y;
+    for(int i = 0; i < 6; i++){
+        x = *board_num_array[i] % 5;
+        y = *board_num_array[i] / 5;
+        if(i < 3){
+            board[y][x] = WHITE;
+        }else{
+            board[y][x] = BLACK;
+        }
+        
+    }   
 }
 
 int encode_board(int board[][5]) {
   int komacount = 0;
-  int key;
-  int subkey1 = 0;
-  int subkey2 = 0;
+  int board_id;
+  int sub_id1 = 0;
+  int sub_id2 = 0;
   
   /*盤面に対して別々にエンコード*/
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 5; j++) {
       if (board[i][j] == 1) {
-        subkey1 += 1 << (24 - (5 * i + j));
+        sub_id1 += 1 << (24 - (5 * i + j));
         komacount++;
       }
       else if (board[i][j] == 2) {
-        subkey1 += 1 << (24 - (5 * i + j));
-        subkey2 += 1 << (5 - komacount);
+        sub_id1 += 1 << (24 - (5 * i + j));
+        sub_id2 += 1 << (5 - komacount);
         komacount++;
       } else {}
     }
   }
   
-  key = subkey1 * 64 + subkey2;
-  return key;
+  board_id = sub_id1 * 64 + sub_id2;
+  return board_id;
 }
 
-void decode_key(int key, int board[][5]) {
-  /*subkey2が黒白の順番、subkey1が駒のあるなし*/
-  int subkey2 = key % 64;
-  int subkey1 = key / 64;
+void decode_board_id(int board_id, int board[][5]) {
+  /*sub_id2が黒白の順番、sub_id1が駒のあるなし*/
+  int sub_id2 = board_id % 64;
+  int sub_id1 = board_id / 64;
 
   for (int i = 24; i >= 0; i--) {
-    if ((subkey1 % 2) == 1) {
-      if ((subkey2 % 2) == 0) {
+    if ((sub_id1 % 2) == 1) {
+      if ((sub_id2 % 2) == 0) {
         board[(i / 5)][(i % 5)] = 1;
       } else {
         board[(i / 5)][(i % 5)] = 2;
       }
-      subkey2 /= 2;
-    } else {}
-    subkey1 /= 2;
+      sub_id2 /= 2;
+    }else{
+        board[(i / 5)][(i % 5)] = 0;
+    }
+    sub_id1 /= 2;
   }
   return;
 }
 
-DataItem *table[SIZE];
 
-int main(){
+int relative_move(int board[5][5], Point cur, Vector move_vec, int turn){
     
+    //コピー
+    Point front = cur;
+    Move move;
+    int new_board[5][5] = {};
 
-    hash_init(table);
+    for(int i = 0; i < 5; i++){
+        for(int j = 0; j < 5; j++){
+            new_board[i][j] = board[i][j];
+        }
+    }
 
-    long int moves[] = {20418082124,20418082324,20418070824,20418081624,20418082223,20418082225,20418082022,20418080922,
-    20418062224,20418102224,20418032224,20418132224,20418102224,20418202224};
-    hash_insert(table, 20418082224, moves);
+    while(1){
+        
+        add_vec_to_point(&front, &move_vec,&front);
 
-    printf("%ld\n", hash_search(table, 20418082224)[0]);
+        if(is_on_wall(front) == 1){
+            break;
+        }
+        move.start = cur;
+        move.end = front;
+        
+        if(move_piece(new_board,move,turn)){
+            return encode_board(new_board);
+        }
 
-    int board[5][5] = {
-        {0, 2, 0, 2, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 2, 0, 0},
-        {0, 1, 0, 1, 0}
-        };
-
-    printf("%ld\n",encode_board(board));
+    }
 
     return 0;
+
 }
+
+int* next_board_ids(int board_id, int turn){
+    int board[5][5] = {};
+
+    int *next_board_ids = malloc(sizeof(int)*MAX_TRANSITION);
+    
+    //初期化
+    for(int i = 0; i < MAX_TRANSITION; i++){
+        next_board_ids[i] = -1;
+    }
+    
+    int count = 0; 
+    decode_board_id(board_id,board);
+
+    for(int i = 0 ; i < 5; i++){
+        for(int j = 0; j < 5; j++){
+            if(board[i][j] == turn){
+                //iはy軸走査,jはx軸走査なので逆になります
+                Point cur = {j, i};
+                int next_board_id;
+
+                //全方位確認する
+                for(int dx = -1; dx < 2; dx++){
+                    for(int dy = -1; dy < 2; dy++){
+                        if(dx == 0 && dy == 0) continue;
+
+                        Vector move_vec = {dx,dy};
+                        next_board_id = relative_move(board, cur, move_vec, turn);
+                        if(next_board_id != 0){
+                            next_board_ids[count] = next_board_id;
+                            count++;
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+
+    return next_board_ids;
+}
+
+void make_graph(DataItem **black_table,DataItem **inv_black_table,DataItem **white_table, DataItem **inv_white_table, DataItem **condition_table){
+
+    int w1,w2,w3,b1,b2,b3;
+    int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
+    int board[5][5] = {};
+
+
+    
+    int count = 0;
+
+    printf("Constructing graphs...\n");
+   
+    for(w1 = 0; w1 < 25; w1++){
+        for(w2 = w1 + 1; w2 < 25; w2++){
+            fprintf(stderr, "\r[%3d / 100]",(count*100/STATE_NUM));
+            for(w3 = w2 + 1; w3 < 25; w3++){
+                for(b1 = 0; b1 < 25; b1++){
+                    if(b1 == w1 || b1 == w2 || b1 == w3) continue;
+                    for(b2 = b1 + 1; b2 < 25; b2++){
+                        if(b2 == w1 || b2 == w2 || b2 == w3) continue;
+                        for(b3 = b2 + 1; b3 < 25; b3++){
+                            if(b3 == w1 || b3 == w2 || b3 == w3) continue;
+                            
+                            generate_board_from_array(board,board_num_array);
+
+                            int judge_of_white = judge_one_side(board,WHITE);
+                            int judge_of_black = judge_one_side(board,BLACK);
+
+                            //どちらも勝っている状態、ではないとき
+                            if((judge_of_white & judge_of_black) == 0){
+                                int board_id = encode_board(board);
+                                count++;
+                                //白を動かしたときの遷移先のidの配列を保存
+                                int *white_next_board_ids = next_board_ids(board_id,WHITE);
+                                hash_insert(white_table, board_id, white_next_board_ids);
+
+                                //エッジを逆方向にして保存
+                                for(int i = 0; i < MAX_TRANSITION; i++){
+                                    if(white_next_board_ids[i] == -1) break;
+
+                                    hash_append_data(inv_white_table, white_next_board_ids[i], board_id);
+
+                                }
+
+                                //黒を動かしたときの遷移先のidの配列を保存
+                                int *black_next_board_ids = next_board_ids(board_id,BLACK);
+                                hash_insert(black_table, board_id, black_next_board_ids);
+
+                                //エッジを逆方向にして保存
+                                for(int i = 0; i < MAX_TRANSITION; i++){
+                                    if(black_next_board_ids[i] == -1) break;
+
+                                    hash_append_data(inv_black_table, black_next_board_ids[i], board_id);
+                                }
+
+                                //黒が勝っていれば1が,白が勝っていれば2が入る.その他は0
+                                int *cond_ptr = malloc(sizeof(int));
+                                *cond_ptr = abs(judge_of_white - judge_of_black);
+                                hash_insert(condition_table,board_id,cond_ptr);
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        
+    }
+
+    printf("Done!\n");
+
+
+    
+    
+}
+
+void save_table(DataItem **table,char* file_path){
+    FILE *fpw = fopen(file_path,"wb");
+
+    for(int i = 0; i < SIZE; i++){
+        fwrite(&table[i], sizeof(DataItem), 1, fpw);
+    }
+
+
+    fclose(fpw);
+
+}
+
+void read_graph(DataItem **table, char* file_path){
+    FILE *fpr = fopen(file_path,"rb");
+
+    for(int i = 0; i < SIZE; i++){
+        fread(&table[i], sizeof(DataItem), 1, fpr);
+    }
+
+    fclose(fpr);
+
+}
+
+
+
