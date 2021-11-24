@@ -15,7 +15,7 @@
 //------------------------------------------------
 struct DataItem
 {
-    int *data;
+    int data[MAX_TRANSITION];
     int key;
     struct DataItem *next;
 };

@@ -48,6 +48,7 @@ int* hash_search(DataItem **table, int key)
     return NULL;
 }
 
+
 int hash_insert(DataItem **table, int key, int *data)
 {
     DataItem *p = NULL;
@@ -55,7 +56,7 @@ int hash_insert(DataItem **table, int key, int *data)
 
     if (hash_search(table, key) != NULL)
     {
-        fprintf(stderr, "key[%d] is already exist in hash table.\n", key);
+        fprintf(stderr, "key[%d] already exists in hash table.\n", key);
         return (-1);
     }
 
@@ -67,7 +68,10 @@ int hash_insert(DataItem **table, int key, int *data)
         return (-1);
     }
     p->key = key;
-    p->data = data;
+
+    for (int i = 0; i < MAX_TRANSITION; i++){
+        p->data[i] = data[i];
+    }
 
     hashval = get_hash_value(key);
     p->next = table[hashval];

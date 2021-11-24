@@ -1,6 +1,7 @@
 #include "main.h"
 #include "hash_table.h"
 #include "make_graph.h"
+#include "test_util.h"
 #include<stdio.h>
 #include<stdlib.h>
 #include <assert.h>
@@ -47,7 +48,7 @@ void add_vec_to_point(Point *a, Vector *v, Point *b){
 
 int judge_one_side(int board[5][5], int color){
     /*黒をチェック*/
-    int out = color; /*返り値*/
+    int out = 1; /*返り値*/
 
     /*黒のコマがある場所を確認　（2次元配列を1次元に落としてます）*/
     int tmp[3];
@@ -107,13 +108,13 @@ int judge (int board[5][5]){
     int result = judge_one_side(board,BLACK);
 
     if(result != 0){
-        return result;
+        return 1;
     }
 
     result = judge_one_side(board,WHITE);
 
     if(result != 0){
-        return result;
+        return 2;
     }
 
     return 0;
@@ -258,24 +259,14 @@ void display_board(int board[5][5]) {
   printf("\n");
 }
 
-int is_equal_as_board(int array0[5][5], int array1[5][5]){
-    
-    for(int i = 0; i < 5; i++){
-        for(int j = 0; j < 5; j++){
-            if(array0[i][j] != array1[i][j]){
-                return 0;
-            }
-        }
-    }
-
-    return 1;
-}
 
 DataItem *black_table[SIZE];
 DataItem *inv_black_table[SIZE];
 DataItem *white_table[SIZE];
 DataItem *inv_white_table[SIZE];
-DataItem *condition_table[SIZE];
+DataItem *black_condition_table[SIZE];
+DataItem *white_condition_table[SIZE];
+DataItem *revived_black_table[SIZE];
 
 int main(int argc,char *argv[]){
 
@@ -286,26 +277,24 @@ int main(int argc,char *argv[]){
         {0, 0, 2, 0, 0},
         {0, 1, 0, 1, 0}};
 
-    //テスト---------------------------------------------
+    //テスト----------------------------------------------------------------
+
+    printf("int: %lu bytes\n",sizeof(int));
     hash_init(black_table);
     hash_init(inv_black_table);
     hash_init(white_table);
     hash_init(inv_white_table);
-    hash_init(condition_table);
+    hash_init(black_condition_table);
+    hash_init(white_condition_table);
+
+    hash_init(revived_black_table);
 
     int moves[MAX_TRANSITION] = {};
     for(int i = 0; i < MAX_TRANSITION; i++){
         moves[i] = -1;
     }
 
-    //hash_insert
-    moves[0] = 2040;
-    hash_insert(black_table, 204180, moves);
-    assert(hash_search(black_table, 204180)[0] == moves[0]);
-
-    //hash_append_data
-    hash_append_data(black_table, 204180, 800);
-    assert(hash_search(black_table, 204180)[1] == 800);
+    
 
 
     //generate_board_from_array
@@ -315,7 +304,7 @@ int main(int argc,char *argv[]){
     
     int test_board[5][5] = {};
     generate_board_from_array(test_board,board_num_array);
-    assert(is_equal_as_board(board,test_board));
+    assert(is_same_board(board,test_board));
 
     //encode_board
     int encoded = encode_board(board);
@@ -326,7 +315,7 @@ int main(int argc,char *argv[]){
     int decoded[5][5] = {};
     decode_board_id(encoded, decoded);
     display_board(decoded);
-    assert(is_equal_as_board(board,decoded));
+    assert(is_same_board(board,decoded));
 
 
     //relative_move 
@@ -351,7 +340,9 @@ int main(int argc,char *argv[]){
     }
 
 
-    make_graph(black_table, inv_black_table, white_table, inv_white_table, condition_table);
+    // make_graph
+
+    make_graph(black_table, inv_black_table, white_table, inv_white_table, black_condition_table,white_condition_table);
 
     printf("Saving...\n");
 
@@ -359,14 +350,29 @@ int main(int argc,char *argv[]){
     save_table(white_table, "white_graph.dat");
     save_table(inv_black_table, "inv_black_graph.dat");
     save_table(inv_white_table, "inv_white_graph.dat");
-    save_table(condition_table, "condition_graph.dat");
+    save_table(black_condition_table, "black_condition.dat");
+    save_table(white_condition_table,"white_conditon.dat");
 
     printf("Saved!\n");
+
+    printf("black_table[0]:key %d\n",black_table[0]->key);
+
+    printf("the number of data_items in black_table : %d\n",count_data_items(black_table));
+    reconstruct_graph_from_file(revived_black_table,"black_graph.dat");
+    printf("the number of data_items in revived_black_table : %d\n", count_data_items(revived_black_table));
+
+    
+    //is_same_table
+    assert(is_same_table(black_table,black_table));
+  
+    //reconstruct_graph_from_file
+    assert(is_same_table(black_table,revived_black_table));
+
 
     
     //-----------------------------------------------------------------------
 
-    Move move = {0,0,0,0};
+    Move move = {0, 0, 0, 0};
 
     // 1: first player, 2: second player
     int user_num = atoi(argv[1]) + 1;

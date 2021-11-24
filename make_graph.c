@@ -120,6 +120,7 @@ int relative_move(int board[5][5], Point cur, Vector move_vec, int turn){
 
 int* next_board_ids(int board_id, int turn){
     int board[5][5] = {};
+    int next_board[5][5] = {};
 
     int *next_board_ids = malloc(sizeof(int)*MAX_TRANSITION);
     
@@ -130,6 +131,12 @@ int* next_board_ids(int board_id, int turn){
     
     int count = 0; 
     decode_board_id(board_id,board);
+
+    //すでに勝負がついてる盤面はどこにも遷移しない
+    if(judge(board) != 0){
+        return next_board_ids;
+    }
+
 
     for(int i = 0 ; i < 5; i++){
         for(int j = 0; j < 5; j++){
@@ -145,6 +152,9 @@ int* next_board_ids(int board_id, int turn){
 
                         Vector move_vec = {dx,dy};
                         next_board_id = relative_move(board, cur, move_vec, turn);
+                        
+                        
+
                         if(next_board_id != 0){
                             next_board_ids[count] = next_board_id;
                             count++;
@@ -159,7 +169,7 @@ int* next_board_ids(int board_id, int turn){
     return next_board_ids;
 }
 
-void make_graph(DataItem **black_table,DataItem **inv_black_table,DataItem **white_table, DataItem **inv_white_table, DataItem **condition_table){
+void make_graph(DataItem **black_table,DataItem **inv_black_table,DataItem **white_table, DataItem **inv_white_table, DataItem **black_condition_table, DataItem **white_condition_table){
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
@@ -181,20 +191,23 @@ void make_graph(DataItem **black_table,DataItem **inv_black_table,DataItem **whi
                         if(b2 == w1 || b2 == w2 || b2 == w3) continue;
                         for(b3 = b2 + 1; b3 < 25; b3++){
                             if(b3 == w1 || b3 == w2 || b3 == w3) continue;
-                            
+                        
                             generate_board_from_array(board,board_num_array);
 
                             int judge_of_white = judge_one_side(board,WHITE);
                             int judge_of_black = judge_one_side(board,BLACK);
 
                             //どちらも勝っている状態、ではないとき
-                            if((judge_of_white & judge_of_black) == 0){
+                            if( judge_of_white == 0 || judge_of_black == 0){
                                 int board_id = encode_board(board);
+                               
                                 count++;
+
                                 //白を動かしたときの遷移先のidの配列を保存
                                 int *white_next_board_ids = next_board_ids(board_id,WHITE);
+                                
                                 hash_insert(white_table, board_id, white_next_board_ids);
-
+                            
                                 //エッジを逆方向にして保存
                                 for(int i = 0; i < MAX_TRANSITION; i++){
                                     if(white_next_board_ids[i] == -1) break;
@@ -214,10 +227,17 @@ void make_graph(DataItem **black_table,DataItem **inv_black_table,DataItem **whi
                                     hash_append_data(inv_black_table, black_next_board_ids[i], board_id);
                                 }
 
-                                //黒が勝っていれば1が,白が勝っていれば2が入る.その他は0
-                                int *cond_ptr = malloc(sizeof(int));
-                                *cond_ptr = abs(judge_of_white - judge_of_black);
-                                hash_insert(condition_table,board_id,cond_ptr);
+                                //その色が勝っていれば1が,負けていれば-1が入る
+                                int black_cond[MAX_TRANSITION] = {};
+                                int white_cond[MAX_TRANSITION] = {};
+                                for (int i = 0; i < MAX_TRANSITION; i++){
+                                    black_cond[i] = judge_of_black - judge_of_white;
+                                    white_cond[i] = judge_of_white - judge_of_black;
+                                }
+                        
+                                hash_insert(black_condition_table,board_id,black_cond);
+                                hash_insert(white_condition_table,board_id,white_cond);
+
 
                             }
                         }
@@ -229,7 +249,10 @@ void make_graph(DataItem **black_table,DataItem **inv_black_table,DataItem **whi
         
     }
 
-    printf("Done!\n");
+
+    printf("\nDone!\n");
+
+    printf("count: %d\n",count);
 
 
     
@@ -240,20 +263,37 @@ void save_table(DataItem **table,char* file_path){
     FILE *fpw = fopen(file_path,"wb");
 
     for(int i = 0; i < SIZE; i++){
-        fwrite(&table[i], sizeof(DataItem), 1, fpw);
+        if(table[i] == NULL) continue;
+
+        recursive_save(table[i],fpw);
     }
 
 
     fclose(fpw);
 
 }
+void recursive_save(DataItem *data_item, FILE *fpw){
+    if(data_item->next == NULL){
+        fwrite(data_item,sizeof(DataItem),1,fpw);
 
-void read_graph(DataItem **table, char* file_path){
+    }else{
+        fwrite(data_item,sizeof(DataItem),1,fpw);
+        recursive_save(data_item->next,fpw);
+    }
+}   
+
+void reconstruct_graph_from_file(DataItem **table, char* file_path){
     FILE *fpr = fopen(file_path,"rb");
 
-    for(int i = 0; i < SIZE; i++){
-        fread(&table[i], sizeof(DataItem), 1, fpr);
+    DataItem *data_item = calloc(SIZE,sizeof(DataItem));
+
+    for(int i = 0; i < STATE_NUM; i++){
+
+        fread(&data_item[i], sizeof(DataItem), 1, fpr);
+        hash_insert(table,data_item[i].key,data_item[i].data);
     }
+
+    free(data_item);
 
     fclose(fpr);
 

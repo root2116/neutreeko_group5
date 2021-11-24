@@ -3,6 +3,7 @@
 //------------------------------------------------
 #include "hash_table.h"
 #include "main.h"
+#include <stdio.h>
 //------------------------------------------------
 //  マクロ定義(Macro definition)
 //------------------------------------------------
@@ -28,8 +29,13 @@ int relative_move(int board[5][5], Point cur, Vector move_vec, int turn);
 int* next_board_ids(int board_id, int turn);
 
 
-void make_graph(DataItem **black_table, DataItem **inv_black_table, DataItem **white_table, DataItem **inv_white_table, DataItem **condition_table);
+void make_graph(DataItem **black_table, DataItem **inv_black_table, DataItem **white_table, DataItem **inv_white_table, DataItem **black_condition_table,DataItem **white_condition_table);
 
-void save_table(DataItem **table, char *file_name);
+void save_table(DataItem **table, char *file_path);
+
+void recursive_save(DataItem *data_item, FILE *fpw);
+
+void reconstruct_graph_from_file(DataItem **table, char *file_path);
+
 //------------------------------------------------
 #endif
