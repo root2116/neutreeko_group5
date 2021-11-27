@@ -31,9 +31,9 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                             
                                 generate_board_from_array(board,board_num_array);
                                 now_id = encode_board(board, turn);
-                                hash_insert(next_condition_table, now_id, malloc(sizeof(int)*MAX_TRANSITION));
-                                hash_insert(max_transition_end_table, now_id, malloc(sizeof(int)*MAX_TRANSITION));
-                                hash_insert(best_table, now_id, malloc(sizeof(int)*MAX_TRANSITION));
+                                hash_insert(&next_condition_table, now_id, malloc(sizeof(int)*MAX_TRANSITION));
+                                hash_insert(&max_transition_end_table, now_id, malloc(sizeof(int)*MAX_TRANSITION));
+                                hash_insert(&best_table, now_id, malloc(sizeof(int)*MAX_TRANSITION));
                             }
                         }
                     }
