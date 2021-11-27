@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table){
-    DataItem *next_condition_table[SIZE*2];
-    DataItem *max_transition_end_table[SIZE*2];
-    DataItem *best_table[SIZE*2];
+DataItem** calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table){
+    DataItem *next_condition_table[SIZE];
+    DataItem *max_transition_end_table[SIZE];
+    DataItem *best_table[SIZE];
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
@@ -27,7 +27,7 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
                         if(b2 == w1 || b2 == w2 || b2 == w3) continue;
                         for(b3 = b2 + 1; b3 < 25; b3++){
                             if(b3 == w1 || b3 == w2 || b3 == w3) continue;
-                            for(turn = 0; turn < 2; turn += 1){
+                            for(turn = 1; turn < 3; turn += 1){
                             
                                 generate_board_from_array(board,board_num_array);
                                 now_id = encode_board(board, turn);
@@ -108,7 +108,7 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
                         if(b2 == w1 || b2 == w2 || b2 == w3) continue;
                         for(b3 = b2 + 1; b3 < 25; b3++){
                             if(b3 == w1 || b3 == w2 || b3 == w3) continue;
-                            for (turn = 0; turn < 2; turn += 1){
+                            for (turn = 1; turn < 3; turn += 1){
                                 generate_board_from_array(board,board_num_array);
                                 now_id = encode_board(board, turn);
 
@@ -175,4 +175,5 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
             }
         }
     }
+    return &best_table;
 }

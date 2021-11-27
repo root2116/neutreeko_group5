@@ -7,8 +7,8 @@
 //  マクロ定義(Macro definition)
 //------------------------------------------------
 
-//3540516を超える最小の素数
-#define SIZE 3540521
+//3540516 * 2 = 7081032を超える最小の素数
+#define SIZE 7081049
 #define MAX_TRANSITION 24 // 8方位 * 3駒
 //------------------------------------------------
 //  型定義(Type definition)
@@ -29,14 +29,14 @@ void hash_init(DataItem **table);
 
 // static void cell_free(DataItem *cell);
 
-int get_hash_value(int key);
+int get_hash_value(unsigned int key);
 
-int* hash_search(DataItem **talbe, int key);
+unsigned int* hash_search(DataItem **talbe, unsigned int key);
 
-int hash_insert(DataItem **table, int key, int *data);
+int hash_insert(DataItem **table, unsigned int key, unsigned int *data);
 
 // int hash_delete(DataItem **table, int key);
 
-void hash_append_data(DataItem **table,int key, int new_id);
+void hash_append_data(DataItem **table,unsigned int key, unsigned int new_id);
 //------------------------------------------------
 #endif

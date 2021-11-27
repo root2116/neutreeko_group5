@@ -1,4 +1,5 @@
 #include "hash_table.h"
+#include "make_graph.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -27,12 +28,12 @@ void hash_init(DataItem **table)
 //     return;
 // }
 
-int get_hash_value(int key)
+int get_hash_value(unsigned int key)
 {
     return key % SIZE;
 }
 
-int* hash_search(DataItem **table, int key)
+unsigned int *hash_search(DataItem **table, unsigned int key)
 {
     int hashval = get_hash_value(key);
     DataItem *target = table[hashval];
@@ -48,8 +49,7 @@ int* hash_search(DataItem **table, int key)
     return NULL;
 }
 
-
-int hash_insert(DataItem **table, int key, int *data)
+int hash_insert(DataItem **table, unsigned int key, unsigned int *data)
 {
     DataItem *p = NULL;
     int hashval = 0;
@@ -121,19 +121,19 @@ int hash_insert(DataItem **table, int key, int *data)
 //     return (-1);
 // }
 
-void hash_append_data(DataItem **table, int key, int new_id){
-    int *data = hash_search(table,key);
+void hash_append_data(DataItem **table, unsigned int key, unsigned int new_id){
+    unsigned int *data = hash_search(table,key);
     if(data == NULL){
-        int *new_data = malloc(sizeof(int) * MAX_TRANSITION);
+        unsigned int *new_data = malloc(sizeof(int) * MAX_TRANSITION);
 
         for(int i = 0; i < MAX_TRANSITION; i++){
-            new_data[i] = -1;
+            new_data[i] = END;
         }
         new_data[0] = new_id;
         hash_insert(table, key, new_data);
     }else{
         for(int i = 0; i < MAX_TRANSITION; i++){
-            if(data[i] == -1){
+            if(data[i] == END){
                 data[i] = new_id;
                 break;
         }

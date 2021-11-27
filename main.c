@@ -259,14 +259,12 @@ void display_board(int board[5][5]) {
   printf("\n");
 }
 
+DataItem *graph_table[SIZE];
+DataItem *inv_graph_table[SIZE];
+DataItem *condition_table[SIZE];
 
-DataItem *black_table[SIZE];
-DataItem *inv_black_table[SIZE];
-DataItem *white_table[SIZE];
-DataItem *inv_white_table[SIZE];
-DataItem *black_condition_table[SIZE];
-DataItem *white_condition_table[SIZE];
-DataItem *revived_black_table[SIZE];
+DataItem *revived_graph_table[SIZE];
+
 
 int main(int argc,char *argv[]){
 
@@ -280,14 +278,10 @@ int main(int argc,char *argv[]){
     //テスト----------------------------------------------------------------
 
     printf("int: %lu bytes\n",sizeof(int));
-    hash_init(black_table);
-    hash_init(inv_black_table);
-    hash_init(white_table);
-    hash_init(inv_white_table);
-    hash_init(black_condition_table);
-    hash_init(white_condition_table);
-
-    hash_init(revived_black_table);
+    hash_init(graph_table);
+    hash_init(inv_graph_table);
+    hash_init(condition_table);
+    hash_init(revived_graph_table);
 
     int moves[MAX_TRANSITION] = {};
     for(int i = 0; i < MAX_TRANSITION; i++){
@@ -307,66 +301,62 @@ int main(int argc,char *argv[]){
     assert(is_same_board(board,test_board));
 
     //encode_board
-    int encoded = encode_board(board);
-    printf("%d\n", encoded);
-    assert(encoded == 679486132);
-    
+    unsigned int encoded = encode_board(board,WHITE);
+    printf("%u\n", encoded);
+    assert(encoded == 2826969780);
+
     //decode_board_id
     int decoded[5][5] = {};
-    decode_board_id(encoded, decoded);
+    decode_state_id(encoded, decoded);
     display_board(decoded);
     assert(is_same_board(board,decoded));
 
 
     //relative_move 
     Point cur = {1,4};
-    Vector move_vec = {0,-3};
-    assert(relative_move(board,cur,move_vec,BLACK) == 696262834);
+    Vector move_vec = {0,-1};
+    assert(relative_move(board, cur, move_vec, BLACK) == 2843746482);
 
     //next_board_ids
     
-    int *next_black_board_ids = next_board_ids(1937768462, BLACK);
+    unsigned int *next_state_ids_for_black = generate_next_state_ids(1937768462);
 
-    int expectations[] = {
-        1929412622,
-        1929380110,
-        2063597579,
-        1931477006,
-        1929381902};
+    unsigned int expectations[] = {
+        4076896270,
+        4076863758,
+        4211081227,
+        4078960654,
+        4076865550};
 
     for(int i = 0; i < 5; i++){
-        printf("%d\n",next_black_board_ids[i]);
-        assert(next_black_board_ids[i] == expectations[i]);
+        printf("%u\n",next_state_ids_for_black[i]);
+        assert(next_state_ids_for_black[i] == expectations[i]);
     }
 
 
     // make_graph
 
-    make_graph(black_table, inv_black_table, white_table, inv_white_table, black_condition_table,white_condition_table);
+    make_graph(graph_table, inv_graph_table,condition_table);
 
     printf("Saving...\n");
 
-    save_table(black_table, "black_graph.dat");
-    save_table(white_table, "white_graph.dat");
-    save_table(inv_black_table, "inv_black_graph.dat");
-    save_table(inv_white_table, "inv_white_graph.dat");
-    save_table(black_condition_table, "black_condition.dat");
-    save_table(white_condition_table,"white_conditon.dat");
-
+    save_table(graph_table, "graph_table.dat");
+    save_table(inv_graph_table, "inv_graph_table.dat");
+    save_table(condition_table, "condition_table.dat");
+   
     printf("Saved!\n");
 
-    printf("black_table[0]:key %d\n",black_table[0]->key);
-
-    printf("the number of data_items in black_table : %d\n",count_data_items(black_table));
-    reconstruct_graph_from_file(revived_black_table,"black_graph.dat");
-    printf("the number of data_items in revived_black_table : %d\n", count_data_items(revived_black_table));
+    
+    printf("the number of data_items in black_table : %d\n",count_data_items(graph_table));
+    reconstruct_graph_from_file(revived_graph_table,"graph_table.dat");
+    printf("the number of data_items in revived_black_table : %d\n", count_data_items(revived_graph_table));
 
     
     //is_same_table
-    assert(is_same_table(black_table,black_table));
+    assert(is_same_table(graph_table,graph_table));
   
     //reconstruct_graph_from_file
-    assert(is_same_table(black_table,revived_black_table));
+    assert(is_same_table(graph_table,revived_graph_table));
 
 
     
