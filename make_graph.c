@@ -331,7 +331,7 @@ void recursive_count(DataItem **edge_num_table, DataItem *data_item) {
   if (data_item == NULL) {
     return;
   }
-  int next_nodes_num = 0;
+  unsigned int next_nodes_num = 0;
   unsigned int *data = data_item->data;
   while (*data != 0) {
     next_nodes_num++;
