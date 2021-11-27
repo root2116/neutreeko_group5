@@ -336,13 +336,13 @@ void recursive_count(DataItem **edge_num_table, DataItem *data_item) {
     return;
   }
   int next_nodes_num = 0;
-  unsigned int *data = data_item.data;
+  unsigned int *data = data_item->data;
   while (*data != 0) {
     next_nodes_num++;
     data++;
   }
   hash_insert(edge_num_table, data_item->key, next_nodes_num);
-  recursive_count(edge_num_table, data_item.next);
+  recursive_count(edge_num_table, data_item->next);
 }
 
 
