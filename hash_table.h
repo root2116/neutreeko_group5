@@ -15,8 +15,8 @@
 //------------------------------------------------
 struct DataItem
 {
-    int data[MAX_TRANSITION];
-    int key;
+    unsigned int data[MAX_TRANSITION];
+    unsigned int key;
     struct DataItem *next;
 };
 typedef struct DataItem DataItem;

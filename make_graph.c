@@ -85,7 +85,7 @@ void decode_board_id(int board_id, int board[][5]) {
 }
 
 
-int relative_move(int board[5][5], Point cur, Vector move_vec, int turn){
+unsigned int relative_move(int board[5][5], Point cur, Vector move_vec, int turn){
     
     //コピー
     Point front = cur;
@@ -118,32 +118,33 @@ int relative_move(int board[5][5], Point cur, Vector move_vec, int turn){
 
 }
 
-int* next_board_ids(int board_id, int turn){
+unsigned int* generate_next_state_ids(unsigned int state_id){
     int board[5][5] = {};
-    int next_board[5][5] = {};
+    // int next_board[5][5] = {};
 
-    int *next_board_ids = malloc(sizeof(int)*MAX_TRANSITION);
+    unsigned int *next_state_ids = malloc(sizeof(int)*MAX_TRANSITION);
     
     //初期化
     for(int i = 0; i < MAX_TRANSITION; i++){
-        next_board_ids[i] = -1;
+        next_state_ids[i] = -1;
     }
     
     int count = 0; 
-    decode_board_id(board_id,board);
+    decode_board_id(state_id,board);
 
     //すでに勝負がついてる盤面はどこにも遷移しない
     if(judge(board) != 0){
-        return next_board_ids;
+        return next_state_ids;
     }
 
+    int turn = get_turn_from_state_id(state_id);
 
     for(int i = 0 ; i < 5; i++){
         for(int j = 0; j < 5; j++){
             if(board[i][j] == turn){
                 //iはy軸走査,jはx軸走査なので逆になります
                 Point cur = {j, i};
-                int next_board_id;
+                unsigned int next_state_id;
 
                 //全方位確認する
                 for(int dx = -1; dx < 2; dx++){
@@ -151,12 +152,12 @@ int* next_board_ids(int board_id, int turn){
                         if(dx == 0 && dy == 0) continue;
 
                         Vector move_vec = {dx,dy};
-                        next_board_id = relative_move(board, cur, move_vec, turn);
+                        next_state_id = relative_move(board, cur, move_vec, turn);
                         
                         
 
-                        if(next_board_id != 0){
-                            next_board_ids[count] = next_board_id;
+                        if(next_state_id != 0){
+                            next_state_ids[count] = next_state_id;
                             count++;
                         }
                         
@@ -166,10 +167,10 @@ int* next_board_ids(int board_id, int turn){
         }
     }
 
-    return next_board_ids;
+    return next_state_ids;
 }
 
-void make_graph(DataItem **black_table,DataItem **inv_black_table,DataItem **white_table, DataItem **inv_white_table, DataItem **black_condition_table, DataItem **white_condition_table){
+void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table){
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
@@ -199,44 +200,45 @@ void make_graph(DataItem **black_table,DataItem **inv_black_table,DataItem **whi
 
                             //どちらも勝っている状態、ではないとき
                             if( judge_of_white == 0 || judge_of_black == 0){
-                                int board_id = encode_board(board);
-                               
                                 count++;
 
-                                //白を動かしたときの遷移先のidの配列を保存
-                                int *white_next_board_ids = next_board_ids(board_id,WHITE);
-                                
-                                hash_insert(white_table, board_id, white_next_board_ids);
-                            
-                                //エッジを逆方向にして保存
-                                for(int i = 0; i < MAX_TRANSITION; i++){
-                                    if(white_next_board_ids[i] == -1) break;
-
-                                    hash_append_data(inv_white_table, white_next_board_ids[i], board_id);
-
-                                }
-
                                 //黒を動かしたときの遷移先のidの配列を保存
-                                int *black_next_board_ids = next_board_ids(board_id,BLACK);
-                                hash_insert(black_table, board_id, black_next_board_ids);
+                                unsigned int black_state_id = encode_board(board,BLACK);
+                                unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
+                                hash_insert(graph_table,black_state_id,next_state_ids_for_black);
 
-                                //エッジを逆方向にして保存
                                 for(int i = 0; i < MAX_TRANSITION; i++){
-                                    if(black_next_board_ids[i] == -1) break;
+                                    //末尾まで走査する
+                                    if(next_state_ids_for_black[i] == -1) break;
 
-                                    hash_append_data(inv_black_table, black_next_board_ids[i], board_id);
+                                    hash_append_data(inv_graph_table,next_state_ids_for_black[i],black_state_id);
+
                                 }
 
-                                //その色が勝っていれば1が,負けていれば-1が入る
+                                unsigned int white_state_id = encode_board(board,WHITE);
+
+                                unsigned int *next_state_ids_for_white = generate_next_state_ids(white_state_id);
+
+                                hash_insert(graph_table, white_state_id, next_state_ids_for_white);
+
+                                for (int i = 0; i < MAX_TRANSITION; i++){
+                                    //末尾まで走査する
+                                    if (next_state_ids_for_white[i] == -1)
+                                        break;
+
+                                    hash_append_data(inv_graph_table, next_state_ids_for_white[i], white_state_id);
+                                }
+
+                                // その色が勝っていれば1が,負けていれば-1が入る
                                 int black_cond[MAX_TRANSITION] = {};
                                 int white_cond[MAX_TRANSITION] = {};
                                 for (int i = 0; i < MAX_TRANSITION; i++){
                                     black_cond[i] = judge_of_black - judge_of_white;
                                     white_cond[i] = judge_of_white - judge_of_black;
                                 }
-                        
-                                hash_insert(black_condition_table,board_id,black_cond);
-                                hash_insert(white_condition_table,board_id,white_cond);
+                                hash_insert(condition_table, black_state_id,black_cond );
+                                hash_insert(condition_table, white_state_id, white_cond);
+
 
 
                             }

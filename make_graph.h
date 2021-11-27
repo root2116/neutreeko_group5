@@ -19,17 +19,16 @@
 //------------------------------------------------
 void generate_board_from_array(int board[5][5], int **board_num_array);
 
-int encode_board(int board[][5]);
+unsigned int encode_board(int board[][5]);
 
 void decode_board_id(int board_id, int board[][5]);
 
-int relative_move(int board[5][5], Point cur, Vector move_vec, int turn);
+unsigned int relative_move(int board[5][5], Point cur, Vector move_vec, int turn);
 
 
-int* next_board_ids(int board_id, int turn);
+unsigned int* generate_next_state_ids(unsigned int state_id);
 
-
-void make_graph(DataItem **black_table, DataItem **inv_black_table, DataItem **white_table, DataItem **inv_white_table, DataItem **black_condition_table,DataItem **white_condition_table);
+void make_graph(DataItem **graph_table, DataItem **inv_graph_table, DataItem **condition_table);
 
 void save_table(DataItem **table, char *file_path);
 
