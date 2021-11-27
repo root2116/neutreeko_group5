@@ -115,7 +115,7 @@ unsigned int relative_move(int board[5][5], Point cur, Vector move_vec, int turn
         move.end = front;
         
         if(move_piece(new_board,move,turn)){
-            return encode_board(new_board);
+            return encode_board(new_board,turn);
         }
 
     }

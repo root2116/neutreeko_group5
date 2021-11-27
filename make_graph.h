@@ -19,9 +19,9 @@
 //------------------------------------------------
 void generate_board_from_array(int board[5][5], int **board_num_array);
 
-unsigned int encode_board(int board[][5]);
+unsigned int encode_board(int board[][5],int turn);
 
-void decode_board_id(int board_id, int board[][5]);
+void decode_state_id(int board_id, int board[][5]);
 
 unsigned int relative_move(int board[5][5], Point cur, Vector move_vec, int turn);
 
