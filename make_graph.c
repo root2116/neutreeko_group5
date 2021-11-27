@@ -69,7 +69,7 @@ unsigned int encode_board(int board[][5], int turn) {
 }
 
 
-void decode_board_id(int board_id, int board[][5]) {
+void decode_state_id(int board_id, int board[][5]) {
   /*sub_id2が黒白の順番、sub_id1が駒のあるなし*/
   int sub_id2 = board_id % 64;
   int sub_id1 = board_id / 64;
