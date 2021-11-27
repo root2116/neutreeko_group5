@@ -332,7 +332,7 @@ void recursive_count(DataItem **edge_num_table, DataItem *data_item) {
     return;
   }
   unsigned int next_nodes_num = 0;
-  unsigned int *next_nodes_num_data[MAX_TRANSITION] = {}; 
+  unsigned int next_nodes_num_data[MAX_TRANSITION] = {}; 
   unsigned int *data = data_item->data;
   while (*data != 0) {
     next_nodes_num++;
