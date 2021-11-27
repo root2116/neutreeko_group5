@@ -9,13 +9,13 @@
 
 //3540516 * 2 = 7081032を超える最小の素数
 #define SIZE 7081049
-#define MAX_TRANSITION 32 // 8方位 * 3駒
+#define DATA_LENGTH 32 // 8方位 * 3駒
 //------------------------------------------------
 //  型定義(Type definition)
 //------------------------------------------------
 struct DataItem
 {
-    unsigned int data[MAX_TRANSITION];
+    unsigned int data[DATA_LENGTH];
     unsigned int key;
     struct DataItem *next;
 };

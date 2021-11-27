@@ -69,7 +69,7 @@ int hash_insert(DataItem **table, unsigned int key, unsigned int *data)
     }
     p->key = key;
 
-    for (int i = 0; i < MAX_TRANSITION; i++){
+    for (int i = 0; i < DATA_LENGTH; i++){
         p->data[i] = data[i];
     }
 
@@ -124,15 +124,15 @@ int hash_insert(DataItem **table, unsigned int key, unsigned int *data)
 void hash_append_data(DataItem **table, unsigned int key, unsigned int new_id){
     unsigned int *data = hash_search(table,key);
     if(data == NULL){
-        unsigned int *new_data = malloc(sizeof(int) * MAX_TRANSITION);
+        unsigned int *new_data = malloc(sizeof(int) * DATA_LENGTH);
 
-        for(int i = 0; i < MAX_TRANSITION; i++){
+        for(int i = 0; i < DATA_LENGTH; i++){
             new_data[i] = END;
         }
         new_data[0] = new_id;
         hash_insert(table, key, new_data);
     }else{
-        for(int i = 0; i < MAX_TRANSITION; i++){
+        for(int i = 0; i < DATA_LENGTH; i++){
             if(data[i] == END){
                 data[i] = new_id;
                 break;

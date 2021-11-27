@@ -14,7 +14,7 @@ int is_same_board(int array1[5][5], int array2[5][5]){
     return 1;
 }
 
-int is_same_array(int *array1, int *array2, int len)
+int is_same_array(unsigned int *array1, unsigned int *array2, int len)
 {
     for (int i = 0; i < len; i++)
     {
@@ -55,13 +55,13 @@ int is_same_table(DataItem **table1,DataItem **table2){
             DataItem *cur = table1[i];
             while(1){
                 // table1[i] ⊂ table2[i]であることを確認する
-                int *correspondence = hash_search(table2,cur->key);
+                unsigned int *correspondence = hash_search(table2,cur->key);
 
                 //そもそも対応物がない場合
                 if(correspondence == NULL) return 0;
 
                 //keyは同じだが中身が違う場合
-                if(is_same_array(cur->data,correspondence,MAX_TRANSITION) != 1) return 0;
+                if(is_same_array(cur->data,correspondence,DATA_LENGTH) != 1) return 0;
 
                 
                 //table1[i] ⊂ table2[i]が確認できた上で、要素数が同じなら, table1[i] は table2[i] に等しい

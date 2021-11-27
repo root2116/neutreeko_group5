@@ -132,10 +132,10 @@ unsigned int* generate_next_state_ids(unsigned int state_id){
     int board[5][5] = {};
     // int next_board[5][5] = {};
 
-    unsigned int *next_state_ids = malloc(sizeof(int)*MAX_TRANSITION);
+    unsigned int *next_state_ids = malloc(sizeof(int)*DATA_LENGTH);
     
     //初期化
-    for(int i = 0; i < MAX_TRANSITION; i++){
+    for(int i = 0; i < DATA_LENGTH; i++){
         next_state_ids[i] = END;
     }
     
@@ -219,7 +219,7 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
                                 unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
                                 hash_insert(graph_table,black_state_id,next_state_ids_for_black);
 
-                                for(int i = 0; i < MAX_TRANSITION; i++){
+                                for(int i = 0; i < DATA_LENGTH; i++){
                                     //末尾まで走査する
                                     if(next_state_ids_for_black[i] == END) break;
                                     
@@ -234,7 +234,7 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
 
                                 hash_insert(graph_table, white_state_id, next_state_ids_for_white);
 
-                                for (int i = 0; i < MAX_TRANSITION; i++){
+                                for (int i = 0; i < DATA_LENGTH; i++){
                                     //末尾まで走査する
                                     if (next_state_ids_for_white[i] == END)
                                         break;
@@ -244,9 +244,9 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
                                 }
 
                                 // その色が勝っていれば2が,負けていれば0が、引き分け1
-                                unsigned int black_cond[MAX_TRANSITION] = {};
-                                unsigned int white_cond[MAX_TRANSITION] = {};
-                                for (int i = 0; i < MAX_TRANSITION; i++){
+                                unsigned int black_cond[DATA_LENGTH] = {};
+                                unsigned int white_cond[DATA_LENGTH] = {};
+                                for (int i = 0; i < DATA_LENGTH; i++){
                                     black_cond[i] = judge_of_black - judge_of_white + 1;
                                     white_cond[i] = judge_of_white - judge_of_black + 1;
                                 }
@@ -334,7 +334,7 @@ void recursive_count(DataItem **edge_num_table, DataItem *data_item) {
     return;
   }
   unsigned int next_nodes_num = 0;
-  unsigned int next_nodes_num_data[MAX_TRANSITION] = {}; 
+  unsigned int next_nodes_num_data[DATA_LENGTH] = {}; 
   unsigned int *data = data_item->data;
   while (*data != 0) {
     next_nodes_num++;

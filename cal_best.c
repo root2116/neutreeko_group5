@@ -31,9 +31,9 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                             
                                 generate_board_from_array(board,board_num_array);
                                 now_id = encode_board(board, turn);
-                                hash_insert(&next_condition_table, now_id, malloc(sizeof(int)*MAX_TRANSITION));
-                                hash_insert(&max_transition_end_table, now_id, malloc(sizeof(int)*MAX_TRANSITION));
-                                hash_insert(&best_table, now_id, malloc(sizeof(int)*MAX_TRANSITION));
+                                hash_insert(&next_condition_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
+                                hash_insert(&max_transition_end_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
+                                hash_insert(&best_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
                             }
                         }
                     }
@@ -67,7 +67,7 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                 break;
             }
             now_id = to_check_id_table[i];
-            for (j = 0; j < MAX_TRANSITION; j += 1){
+            for (j = 0; j < DATA_LENGTH; j += 1){
                 next_id = hash_search(inv_graph_table,checked_id_table[i])[j];
                 if (next_id == 0){
                     break;
@@ -117,7 +117,7 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                                     best_id = 0;
                                     tmp_max_transition_end = -SIZE;
 
-                                    for (j = 0; j < MAX_TRANSITION; j += 1){
+                                    for (j = 0; j < DATA_LENGTH; j += 1){
                                         next_id = hash_search(graph_table,now_id)[j];
                                         if (next_id == 0){
                                             break;
@@ -136,7 +136,7 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                                     best_id = 0;
                                     tmp_max_transition_end = -SIZE;
 
-                                    for (j = 0; j < MAX_TRANSITION; j += 1){
+                                    for (j = 0; j < DATA_LENGTH; j += 1){
                                         next_id = hash_search(graph_table,now_id)[j];
                                         if (next_id == 0){
                                             break;
@@ -156,7 +156,7 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                                     best_id = 0;
                                     tmp_max_transition_end = -SIZE;
 
-                                    for (j = 0; j < MAX_TRANSITION; j += 1){
+                                    for (j = 0; j < DATA_LENGTH; j += 1){
                                         next_id = hash_search(graph_table,now_id)[j];
                                         if (next_id == 0){
                                             break;

@@ -283,8 +283,8 @@ int main(int argc,char *argv[]){
     hash_init(condition_table);
     hash_init(revived_graph_table);
 
-    int moves[MAX_TRANSITION] = {};
-    for(int i = 0; i < MAX_TRANSITION; i++){
+    int moves[DATA_LENGTH] = {};
+    for(int i = 0; i < DATA_LENGTH; i++){
         moves[i] = -1;
     }
 
