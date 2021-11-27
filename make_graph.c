@@ -64,11 +64,7 @@ unsigned int encode_board(int board[][5], int turn) {
     }
   }
   
-<<<<<<< HEAD
   board_id = ((turn - 1)<< 31) + sub_id1 * 64 + sub_id2;
-=======
-  board_id = ((turn-1) << 31) + sub_id1 * 64 + sub_id2;
->>>>>>> 469ab7b09e2f7a84cc008118be8aeef640a48776
   return board_id;
 }
 
