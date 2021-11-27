@@ -175,5 +175,5 @@ DataItem** calculate_best(DataItem **graph_table,DataItem **inv_graph_table,Data
             }
         }
     }
-    return &best_table;
+    return best_table;
 }
