@@ -68,21 +68,21 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
             }
             now_id = to_check_id_table[i];
             for (j = 0; j < MAX_TRANSITION; j += 1){
-                next_id = hash_search(&inv_graph_table,checked_id_table[i])[j];
+                next_id = hash_search(inv_graph_table,checked_id_table[i])[j];
                 if (next_id == 0){
                     break;
                 }
                 
-                if (hash_search(&condition_table,now_id)[0] == 0){
-                    hash_search(&next_condition_table,now_id)[hash_search(&condition_table,now_id)[0]] += 1;
+                if (hash_search(condition_table,now_id)[0] == 0){
+                    hash_search(&next_condition_table,now_id)[hash_search(condition_table,now_id)[0]] += 1;
                     if (hash_search(&next_condition_table,now_id)[0] > 0){
-                        hash_search(&condition_table,now_id)[0] = 1;
+                        hash_search(condition_table,now_id)[0] = 1;
                         to_check_id_table[c] = now_id;
                         c += 1;
                         hash_search(&max_transition_end_table,now_id)[0] = layer;
                     }
-                    else if (hash_search(&next_condition_table,now_id)[2] == hash_search(&edge_num_table,now_id)[0]  /*　==要素数*/){
-                        hash_search(&condition_table,now_id)[0] = -1;
+                    else if (hash_search(&next_condition_table,now_id)[2] == hash_search(edge_num_table,now_id)[0]  /*　==要素数*/){
+                        hash_search(condition_table,now_id)[0] = -1;
                         to_check_id_table[c] = now_id;
                         c += 1;
                         hash_search(&max_transition_end_table,now_id)[0] = -layer;
@@ -113,16 +113,16 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                                 now_id = encode_board(board, turn);
 
                                 /*勝ち盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
-                                if (hash_search(&condition_table,now_id)[0] == 1){
+                                if (hash_search(condition_table,now_id)[0] == 1){
                                     best_id = 0;
                                     tmp_max_transition_end = -SIZE;
 
                                     for (j = 0; j < MAX_TRANSITION; j += 1){
-                                        next_id = hash_search(&graph_table,now_id)[j];
+                                        next_id = hash_search(graph_table,now_id)[j];
                                         if (next_id == 0){
                                             break;
                                         }
-                                        if (hash_search(&condition_table,next_id)[0] == -1){
+                                        if (hash_search(condition_table,next_id)[0] == -1){
                                             if (hash_search(&max_transition_end_table,next_id)[0] > tmp_max_transition_end){
                                                 tmp_max_transition_end = hash_search(&max_transition_end_table,next_id)[0];
                                                 best_id = next_id;
@@ -132,16 +132,16 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                                     hash_search(&best_table,now_id)[0] = best_id;
                                 }
                                 /*負け盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
-                                else if (hash_search(&condition_table,now_id)[0] == -1){
+                                else if (hash_search(condition_table,now_id)[0] == -1){
                                     best_id = 0;
                                     tmp_max_transition_end = -SIZE;
 
                                     for (j = 0; j < MAX_TRANSITION; j += 1){
-                                        next_id = hash_search(&graph_table,now_id)[j];
+                                        next_id = hash_search(graph_table,now_id)[j];
                                         if (next_id == 0){
                                             break;
                                         }
-                                        if (hash_search(&condition_table,next_id)[0] == 1){
+                                        if (hash_search(condition_table,next_id)[0] == 1){
                                             if (hash_search(&max_transition_end_table,next_id)[0] > tmp_max_transition_end){
                                                 tmp_max_transition_end = hash_search(&max_transition_end_table,next_id)[0];
                                                 best_id = next_id;
@@ -157,11 +157,11 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                                     tmp_max_transition_end = -SIZE;
 
                                     for (j = 0; j < MAX_TRANSITION; j += 1){
-                                        next_id = hash_search(&graph_table,now_id)[j];
+                                        next_id = hash_search(graph_table,now_id)[j];
                                         if (next_id == 0){
                                             break;
                                         }
-                                        if (hash_search(&condition_table,next_id)[0] == 0){
+                                        if (hash_search(condition_table,next_id)[0] == 0){
                                             tmp_max_transition_end = hash_search(&max_transition_end_table,next_id)[0];
                                             best_id = next_id;
                                         }
