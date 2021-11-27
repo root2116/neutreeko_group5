@@ -314,7 +314,7 @@ void reconstruct_graph_from_file(DataItem **table, char* file_path){
 
 }
 
-DataItem ** edge_num_count(DataItem **edge_num_table, DataItem **graph_table) {
+DataItem ** edge_num_count(DataItem **graph_table) {
   DataItem **edge_num_table = malloc(sizeof(DataItem *) * SIZE);
   if (edge_num_table == NULL) {
     fprintf(stderr,"memory not allocated");
