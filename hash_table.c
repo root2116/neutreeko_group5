@@ -56,7 +56,7 @@ int hash_insert(DataItem **table, unsigned int key, unsigned int *data)
 
     if (hash_search(table, key) != NULL)
     {
-        fprintf(stderr, "key[%d] already exists in hash table.\n", key);
+        fprintf(stderr, "key[%u] already exists in hash table.\n", key);
         return (-1);
     }
 

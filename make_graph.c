@@ -189,13 +189,12 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
 
     
     int count = 0;
-    int hash_data_append_count = 0;
 
     printf("Constructing graphs...\n");
    
     for(w1 = 0; w1 < 25; w1++){
         for(w2 = w1 + 1; w2 < 25; w2++){
-            fprintf(stderr, "\r[%3d / 100]",(count*100/STATE_NUM));
+            fprintf(stderr, "\r[%3d / 100]",(2*count*100/STATE_NUM));
             for(w3 = w2 + 1; w3 < 25; w3++){
                 for(b1 = 0; b1 < 25; b1++){
                     if(b1 == w1 || b1 == w2 || b1 == w3) continue;
@@ -240,7 +239,7 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
                                         break;
 
                                     hash_append_data(inv_graph_table, next_state_ids_for_white[i], white_state_id);
-                                    hash_data_append_count++;
+                                    
                                 }
 
                                 // その色が勝っていれば2が,負けていれば0が、引き分け1
@@ -269,7 +268,6 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
     printf("\nDone!\n");
 
     printf("count: %d\n",count);
-    printf("hash_data_append_count: %d\n",hash_data_append_count);
 
 
     
@@ -322,7 +320,7 @@ DataItem ** edge_num_count(DataItem **graph_table) {
     fprintf(stderr,"memory not allocated");
   }
   for (int i = 0; i < SIZE; i++) {
-    if ((edge_num_table[i] = graph_table[i]) != NULL) {
+    if (graph_table[i] != NULL) {
       recursive_count(edge_num_table, graph_table[i]);
     }
   }
