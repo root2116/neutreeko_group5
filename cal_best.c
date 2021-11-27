@@ -8,9 +8,9 @@
 #include <stdlib.h>
 
 DataItem** calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table){
-    DataItem *next_condition_table[SIZE];
-    DataItem *max_transition_end_table[SIZE];
-    DataItem *best_table[SIZE];
+    DataItem *next_condition_table = malloc(sizeof(DataItem)*SIZE);
+    DataItem *max_transition_end_table = malloc(sizeof(DataItem)*SIZE);
+    DataItem *best_table = malloc(sizeof(DataItem)*SIZE);
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
@@ -175,5 +175,7 @@ DataItem** calculate_best(DataItem **graph_table,DataItem **inv_graph_table,Data
             }
         }
     }
+    free(next_condition_table);
+    free(max_transition_end_table);
     return best_table;
 }
