@@ -215,13 +215,15 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
 
                                 //黒を動かしたときの遷移先のidの配列を保存
                                 unsigned int black_state_id = encode_board(board,BLACK);
+                                
                                 unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
                                 hash_insert(graph_table,black_state_id,next_state_ids_for_black);
 
                                 for(int i = 0; i < MAX_TRANSITION; i++){
                                     //末尾まで走査する
                                     if(next_state_ids_for_black[i] == END) break;
-
+                                    
+                                    
                                     hash_append_data(inv_graph_table,next_state_ids_for_black[i], black_state_id);
                                     
                                 }
