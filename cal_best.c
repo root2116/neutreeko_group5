@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-DataItem** calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table){
+DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table){
     DataItem *next_condition_table = malloc(sizeof(DataItem)*SIZE);
     DataItem *max_transition_end_table = malloc(sizeof(DataItem)*SIZE);
     DataItem *best_table = malloc(sizeof(DataItem)*SIZE);
