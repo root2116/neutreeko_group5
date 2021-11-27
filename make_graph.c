@@ -38,9 +38,14 @@ void generate_board_from_array(int board[5][5], int **board_num_array){
     }   
 }
 
-int encode_board(int board[][5]) {
+int get_turn_from_state_id(unsigned int state_id) {
+  int turn = state_id >> 31;
+  return turn;
+}
+
+unsigned int encode_board(int board[][5], int turn) {
   int komacount = 0;
-  int board_id;
+  unsigned int board_id;
   int sub_id1 = 0;
   int sub_id2 = 0;
   
@@ -59,9 +64,10 @@ int encode_board(int board[][5]) {
     }
   }
   
-  board_id = sub_id1 * 64 + sub_id2;
+  board_id = (turn << 31) + sub_id1 * 64 + sub_id2;
   return board_id;
 }
+
 
 void decode_board_id(int board_id, int board[][5]) {
   /*sub_id2が黒白の順番、sub_id1が駒のあるなし*/
