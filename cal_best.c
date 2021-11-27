@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table){
+DataItem** calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table){
     DataItem *next_condition_table[SIZE*2];
     DataItem *max_transition_end_table[SIZE*2];
     DataItem *best_table[SIZE*2];
@@ -175,4 +175,5 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
             }
         }
     }
+    return &best_table;
 }
