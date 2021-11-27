@@ -263,6 +263,8 @@ void display_board(int board[5][5]) {
 DataItem *graph_table[SIZE];
 DataItem *inv_graph_table[SIZE];
 DataItem *condition_table[SIZE];
+DataItem *edge_num_table[SIZE];
+DataItem *best_table[SIZE];
 DataItem *revived_graph_table[SIZE];
 
 
@@ -361,12 +363,12 @@ int main(int argc,char *argv[]){
 
     //edge_num_table
     
-    DataItem **edge_num_table = edge_num_count(inv_graph_table);
+    edge_num_count(inv_graph_table,edge_num_table);
     printf("edge_num_count finished\n");
 
 
     //cal_best
-    calculate_best(graph_table,inv_graph_table,condition_table,edge_num_table);
+    calculate_best(graph_table,inv_graph_table,condition_table,edge_num_table,best_table);
     printf("calculate_best finished\n");
 
     //-----------------------------------------------------------------------

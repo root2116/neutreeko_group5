@@ -15,7 +15,7 @@
 //  プロトタイプ宣言(Prototype declaration)
 //------------------------------------------------
 
-DataItem **calculate_best(DataItem **graph_table, DataItem **inv_graph_table, DataItem **condition_table, DataItem **edge_num_table);
+DataItem **calculate_best(DataItem **graph_table, DataItem **inv_graph_table, DataItem **condition_table, DataItem **edge_num_table, DataItem **best_table);
 
 //------------------------------------------------
 #endif

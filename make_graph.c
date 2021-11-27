@@ -314,17 +314,15 @@ void reconstruct_graph_from_file(DataItem **table, char* file_path){
 
 }
 
-DataItem ** edge_num_count(DataItem **graph_table) {
-  DataItem **edge_num_table = malloc(sizeof(DataItem *) * SIZE);
-  if (edge_num_table == NULL) {
-    fprintf(stderr,"memory not allocated");
-  }
+void edge_num_count(DataItem **graph_table,DataItem **edge_num_table) {
+  
+  
   for (int i = 0; i < SIZE; i++) {
     if (graph_table[i] != NULL) {
       recursive_count(edge_num_table, graph_table[i]);
     }
   }
-  return edge_num_table;
+
 }
 
 void recursive_count(DataItem **edge_num_table, DataItem *data_item) {
