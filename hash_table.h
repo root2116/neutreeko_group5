@@ -27,7 +27,7 @@ typedef struct DataItem DataItem;
 
 void hash_init(DataItem **table);
 
-// static void cell_free(DataItem *cell);
+
 
 int get_hash_value(unsigned int key);
 
@@ -35,7 +35,7 @@ unsigned int* hash_search(DataItem **talbe, unsigned int key);
 
 int hash_insert(DataItem **table, unsigned int key, unsigned int *data);
 
-// int hash_delete(DataItem **table, int key);
+int hash_delete(DataItem **table, unsigned int key);
 
 void hash_append_data(DataItem **table,unsigned int key, unsigned int new_id);
 //------------------------------------------------
