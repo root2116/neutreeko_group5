@@ -64,7 +64,7 @@ unsigned int encode_board(int board[][5], int turn) {
     }
   }
   
-  board_id = (turn << 31) + sub_id1 * 64 + sub_id2;
+  board_id = ((turn - 1)<< 31) + sub_id1 * 64 + sub_id2;
   return board_id;
 }
 
@@ -306,6 +306,34 @@ void reconstruct_graph_from_file(DataItem **table, char* file_path){
     fclose(fpr);
 
 }
+
+DataItem ** edge_num_count(DataItem **edge_num_table, DataItem **graph_table) {
+  DataItem **edge_num_table = malloc(sizeof(DataItem *) * SIZE);
+  if (edge_num_table == NULL) {
+    fprintf(stderr,"memory not allocated");
+  }
+  for (int i = 0; i < SIZE; i++) {
+    if ((edge_num_table[i] = graph_table[i]) != NULL) {
+      recursive_count(edge_num_table, graph_table[i]);
+    }
+  }
+  return edge_num_table;
+}
+
+void recursive_count(DataItem **edge_num_table, DataItem *data_item) {
+  if (data_item == NULL) {
+    return;
+  }
+  int next_nodes_num = 0;
+  unsigned int *data = data_item.data;
+  while (*data != 0) {
+    next_nodes_num++;
+    data++;
+  }
+  hash_insert(edge_num_table, data_item->key, next_nodes_num);
+  recursive_count(edge_num_table, data_item.next);
+}
+
 
 
 
