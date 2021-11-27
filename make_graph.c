@@ -38,9 +38,9 @@ void generate_board_from_array(int board[5][5], int **board_num_array){
     }   
 }
 
-int get_turn_from_state_id(unsigned int state_id) {
+int get_color_from_state_id(unsigned int state_id) {
   int turn = state_id >> 31;
-  return turn;
+  return turn+1;
 }
 
 unsigned int encode_board(int board[][5], int turn) {
@@ -64,12 +64,12 @@ unsigned int encode_board(int board[][5], int turn) {
     }
   }
   
-  board_id = (turn << 31) + sub_id1 * 64 + sub_id2;
+  board_id = ((turn-1) << 31) + sub_id1 * 64 + sub_id2;
   return board_id;
 }
 
 
-void decode_state_id(int board_id, int board[][5]) {
+void decode_state_id(unsigned int board_id, int board[][5]) {
   /*sub_id2が黒白の順番、sub_id1が駒のあるなし*/
   int sub_id2 = board_id % 64;
   int sub_id1 = board_id / 64;
@@ -115,7 +115,11 @@ unsigned int relative_move(int board[5][5], Point cur, Vector move_vec, int turn
         move.end = front;
         
         if(move_piece(new_board,move,turn)){
-            return encode_board(new_board,turn);
+            if(turn == WHITE){
+                return encode_board(new_board,BLACK);
+            }else{
+                return encode_board(new_board,WHITE);
+            }
         }
 
     }
@@ -132,22 +136,22 @@ unsigned int* generate_next_state_ids(unsigned int state_id){
     
     //初期化
     for(int i = 0; i < MAX_TRANSITION; i++){
-        next_state_ids[i] = -1;
+        next_state_ids[i] = END;
     }
     
     int count = 0; 
-    decode_board_id(state_id,board);
+    decode_state_id(state_id,board);
 
     //すでに勝負がついてる盤面はどこにも遷移しない
     if(judge(board) != 0){
         return next_state_ids;
     }
 
-    int turn = get_turn_from_state_id(state_id);
+    int color = get_color_from_state_id(state_id);
 
     for(int i = 0 ; i < 5; i++){
         for(int j = 0; j < 5; j++){
-            if(board[i][j] == turn){
+            if(board[i][j] == color){
                 //iはy軸走査,jはx軸走査なので逆になります
                 Point cur = {j, i};
                 unsigned int next_state_id;
@@ -158,7 +162,7 @@ unsigned int* generate_next_state_ids(unsigned int state_id){
                         if(dx == 0 && dy == 0) continue;
 
                         Vector move_vec = {dx,dy};
-                        next_state_id = relative_move(board, cur, move_vec, turn);
+                        next_state_id = relative_move(board, cur, move_vec, color);
                         
                         
 
@@ -185,6 +189,7 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
 
     
     int count = 0;
+    int hash_data_append_count = 0;
 
     printf("Constructing graphs...\n");
    
@@ -215,10 +220,10 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
 
                                 for(int i = 0; i < MAX_TRANSITION; i++){
                                     //末尾まで走査する
-                                    if(next_state_ids_for_black[i] == -1) break;
+                                    if(next_state_ids_for_black[i] == END) break;
 
-                                    hash_append_data(inv_graph_table,next_state_ids_for_black[i],black_state_id);
-
+                                    hash_append_data(inv_graph_table,next_state_ids_for_black[i], black_state_id);
+                                    
                                 }
 
                                 unsigned int white_state_id = encode_board(board,WHITE);
@@ -229,18 +234,19 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
 
                                 for (int i = 0; i < MAX_TRANSITION; i++){
                                     //末尾まで走査する
-                                    if (next_state_ids_for_white[i] == -1)
+                                    if (next_state_ids_for_white[i] == END)
                                         break;
 
                                     hash_append_data(inv_graph_table, next_state_ids_for_white[i], white_state_id);
+                                    hash_data_append_count++;
                                 }
 
-                                // その色が勝っていれば1が,負けていれば-1が入る
-                                int black_cond[MAX_TRANSITION] = {};
-                                int white_cond[MAX_TRANSITION] = {};
+                                // その色が勝っていれば2が,負けていれば0が、引き分け1
+                                unsigned int black_cond[MAX_TRANSITION] = {};
+                                unsigned int white_cond[MAX_TRANSITION] = {};
                                 for (int i = 0; i < MAX_TRANSITION; i++){
-                                    black_cond[i] = judge_of_black - judge_of_white;
-                                    white_cond[i] = judge_of_white - judge_of_black;
+                                    black_cond[i] = judge_of_black - judge_of_white + 1;
+                                    white_cond[i] = judge_of_white - judge_of_black + 1;
                                 }
                                 hash_insert(condition_table, black_state_id,black_cond );
                                 hash_insert(condition_table, white_state_id, white_cond);
@@ -261,6 +267,7 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
     printf("\nDone!\n");
 
     printf("count: %d\n",count);
+    printf("hash_data_append_count: %d\n",hash_data_append_count);
 
 
     
