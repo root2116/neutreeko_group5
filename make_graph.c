@@ -339,7 +339,7 @@ void recursive_count(DataItem **edge_num_table, DataItem *data_item) {
     data++;
   }
   next_nodes_num_data[0] = next_nodes_num;
-  hash_insert(edge_num_table, data_item->key, next_nodes_num_data[0]);
+  hash_insert(edge_num_table, data_item->key, next_nodes_num_data);
   recursive_count(edge_num_table, data_item->next);
 }
 
