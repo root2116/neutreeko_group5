@@ -31,9 +31,9 @@ unsigned int relative_move(int board[5][5], Point cur, Vector move_vec, int turn
 
 unsigned int* generate_next_state_ids(unsigned int state_id);
 
-void make_dictionary(DataItem **dictionary);
+void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]);
 
-void make_graph(DataItem **dictionary, unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
+void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
 
 void remove_unreachable_states(DataItem **graph_table, DataItem **condition_table);
 

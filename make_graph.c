@@ -240,7 +240,7 @@ void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]){
 
 
 
-void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGTH], unsigned int inv_graph_table[SIZE][DATA_LENGTH], unsigned int condition_array[]){
+void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigned int graph_table[SIZE][DATA_LENGTH], unsigned int inv_graph_table[SIZE][DATA_LENGTH], unsigned int condition_array[]){
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
@@ -310,8 +310,8 @@ void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGT
     int end_count[SIZE];
     unsigned int from_key;
     int to_index;
-    for (i = 0; i < SIZE; i += 1){
-        for (j = 0; j < DATA_LENGTH; j += 1){//i(index)からgraph[i][j](key)に遷移する
+    for (int i = 0; i < SIZE; i += 1){
+        for (int j = 0; j < DATA_LENGTH; j += 1){//i(index)からgraph[i][j](key)に遷移する
         //inv_graphにgraph[i][j](index)からi(key)への辺を張る
             from_key = inv_dictionary[i];
             to_index = hash_search(dictionary ,graph_table[i][j]);
