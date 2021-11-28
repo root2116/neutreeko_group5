@@ -237,7 +237,7 @@ void make_dictionary(DataItem **dictionary){
 
 
 
-void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGTH] ,unsigned int condition_array[]){
+void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGTH], unsigned int inv_graph_table[SIZE][DATA_LENGTH], unsigned int condition_array[]){
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
@@ -245,14 +245,14 @@ void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGT
     int black_state_index = 0;
     int white_state_index = 0;
     int i;
-    int count = 0;
+    int loop_count = 0;
     
 
     printf("Constructing graphs...\n");
    
     for(w1 = 0; w1 < 25; w1++){
         for(w2 = w1 + 1; w2 < 25; w2++){
-            fprintf(stderr, "\r[%3d / 100]",(2*count*100/STATE_NUM));
+            fprintf(stderr, "\r[%3d / 100]",(2*loop_count*100/STATE_NUM));
             for(w3 = w2 + 1; w3 < 25; w3++){
                 for(b1 = 0; b1 < 25; b1++){
                     if(b1 == w1 || b1 == w2 || b1 == w3) continue;
@@ -260,7 +260,7 @@ void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGT
                         if(b2 == w1 || b2 == w2 || b2 == w3) continue;
                         for(b3 = b2 + 1; b3 < 25; b3++){
                             if(b3 == w1 || b3 == w2 || b3 == w3) continue;
-                        
+                            loop_count++;
                             generate_board_from_array(board,board_num_array);
 
                             int judge_of_white = judge_one_side(board,WHITE);

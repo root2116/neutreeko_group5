@@ -290,12 +290,12 @@ int main(int argc,char *argv[]){
 
     
 
-
+    make_dictionary(dict);
     // make_graph
 
     make_graph(dict,graph_table, inv_graph_table,condition_array);
 
-    
+    // 
     
     // printf("the number of data_items in graph_table : %d\n",count_data_items(graph_table));
 
@@ -317,7 +317,7 @@ int main(int argc,char *argv[]){
     printf("Saving...\n");
 
     save_int_table(graph_table, "graph_table.dat");
-    save_int_table(inv_graph_table, "inv_graph_table.dat");
+    // save_int_table(inv_graph_table, "inv_graph_table.dat");
     save_int_array(condition_array, "condition_array.dat");
     
 
@@ -342,8 +342,8 @@ int main(int argc,char *argv[]){
 
 
     //cal_best
-    calculate_best(graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
-    printf("calculate_best finished\n");
+    // calculate_best(graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
+    // printf("calculate_best finished\n");
 
     //-----------------------------------------------------------------------
 

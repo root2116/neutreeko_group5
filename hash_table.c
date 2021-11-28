@@ -25,7 +25,7 @@ int get_hash_value(unsigned int key)
     return key % SIZE;
 }
 
-unsigned int hash_search(DataItem **table, unsigned int key)
+int hash_search(DataItem **table, unsigned int key)
 {
     int hashval = get_hash_value(key);
     DataItem *target = table[hashval];
@@ -38,7 +38,7 @@ unsigned int hash_search(DataItem **table, unsigned int key)
         }
     }
 
-    return NULL;
+    return -1;
 }
 
 int hash_insert(DataItem **table, unsigned int key, unsigned int data)
@@ -46,7 +46,7 @@ int hash_insert(DataItem **table, unsigned int key, unsigned int data)
     DataItem *p = NULL;
     int hashval = 0;
 
-    if (hash_search(table, key) != NULL)
+    if (hash_search(table, key) != -1)
     {
         fprintf(stderr, "key[%u] already exists in hash table.\n", key);
         return (-1);
