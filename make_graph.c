@@ -304,10 +304,11 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
                                     graph_table[white_state_index][i] = next_state_ids_for_white[i];
                                 }
                             }
-
-                            // その色が勝っていれば2が,負けていれば0が、引き分け1
-                            condition_array[black_state_index] = (judge_of_black - judge_of_white) + 1;
-                            condition_array[white_state_index] = -(judge_of_black - judge_of_white) + 1;
+                            if( judge_of_white == 0 || judge_of_black == 0){
+                                // その色が勝っていれば2が,負けていれば0が、引き分け1
+                                condition_array[black_state_index] = (judge_of_black - judge_of_white) + 1;
+                                condition_array[white_state_index] = -(judge_of_black - judge_of_white) + 1;
+                            }
                         }
                     }
                 }
