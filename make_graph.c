@@ -237,15 +237,16 @@ void make_dictionary(DataItem **dictionary){
 
 
 
-void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table){
+void make_graph(DataItem **dictionary, int graph_table[SIZE][DATA_LENGTH] ,int condition_array[]){
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
     int board[5][5] = {};
-
-
-    
+    int black_state_index = 0;
+    int white_state_index = 0;
+    int i;
     int count = 0;
+    
 
     printf("Constructing graphs...\n");
    
@@ -265,79 +266,47 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
                             int judge_of_white = judge_one_side(board,WHITE);
                             int judge_of_black = judge_one_side(board,BLACK);
                             
-                            //どちらも勝っている状態、ではないとき
-                            if( judge_of_white == 0 || judge_of_black == 0){
-                                count++;
+                            //どちらかが勝っている状態、ではないとき(試合継続、遷移あり)
+                            if( judge_of_white == 0 && judge_of_black == 0){
 
                                 
                                 unsigned int black_state_id = encode_board(board,BLACK);
-                                unsigned int white_state_id = encode_board(board, WHITE);
+                                unsigned int white_state_id = encode_board(board,WHITE);
 
                                 
-                                if(judge_of_white == 1 || judge_of_black == 0){
-                                    unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
-                                    hash_insert(graph_table, black_state_id, next_state_ids_for_black);
 
-                                    for (int i = 0; i < DATA_LENGTH; i++){
-                                        //末尾まで走査する
-                                        if (next_state_ids_for_black[i] == END)
-                                            break;
-
-                                        hash_append_data(inv_graph_table, next_state_ids_for_black[i], black_state_id);
+                                unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
+                                black_state_index = hash_search(dictionary, black_state_id);
+                                for (i = 0; i < DATA_LENGTH; i += 1){
+                                    if (next_state_ids_for_black[i] == END){
+                                        break;
                                     }
-
-                                    // その色が勝っていれば2が,負けていれば0が、引き分け1
-                                    unsigned int black_cond[DATA_LENGTH] = {};
-                                    for (int i = 0; i < DATA_LENGTH; i++){
-                                        black_cond[i] = judge_of_black - judge_of_white + 1;
-                                    }
-
-                                    hash_insert(condition_table, black_state_id, black_cond);
-
+                                    graph_table[black_state_index][i] = next_state_ids_for_black[i];
                                 }
+
+                                unsigned int *next_state_ids_for_white = generate_next_state_ids(white_state_id);
+                                white_state_index = hash_search(dictionary ,white_state_id);
+                                for (i = 0; i < DATA_LENGTH; i += 1){
+                                    if (next_state_ids_for_white[i] == END){
+                                        break;
+                                    }
+                                    graph_table[white_state_index][i] = next_state_ids_for_white[i];
+                                }
+
+                                // その色が勝っていれば2が,負けていれば0が、引き分け1
+                                condition_array[black_state_index] = (judge_of_black - judge_of_white)/2 + 1;
+                                condition_array[white_state_index] = -(judge_of_black - judge_of_white)/2 + 1;
                                 
-                                if(judge_of_white == 0 || judge_of_black == 1){
-                                    unsigned int *next_state_ids_for_white = generate_next_state_ids(white_state_id);
-
-                                    hash_insert(graph_table, white_state_id, next_state_ids_for_white);
-
-                                    for (int i = 0; i < DATA_LENGTH; i++){
-                                        //末尾まで走査する
-                                        if (next_state_ids_for_white[i] == END)
-                                            break;
-
-                                        hash_append_data(inv_graph_table, next_state_ids_for_white[i], white_state_id);
-                                    }
-
-
-                                    // その色が勝っていれば2が,負けていれば0が、引き分け1
-                                    unsigned int white_cond[DATA_LENGTH] = {};
-                                    for (int i = 0; i < DATA_LENGTH; i++){
-                                        white_cond[i] = judge_of_white - judge_of_black + 1;
-                                    }
-
-                                    hash_insert(condition_table, white_state_id, white_cond);
-                                }
-
                             }
                         }
                     }
                 }
             }
-        }
-
-        
+        }    
     }
-
-
-    printf("\nDone!\n");
-
-    printf("count: %d\n",count);
-
-
-    
-    
+    printf("\nDone!\n");    
 }
+
 
 
 void remove_unreachable_states(DataItem **graph_table,DataItem **condition_table){
