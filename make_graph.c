@@ -200,7 +200,7 @@ void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]){
    
     for(w1 = 0; w1 < 25; w1++){
         for(w2 = w1 + 1; w2 < 25; w2++){
-            fprintf(stderr, "\r[%3d / 100]",(2*count*100/STATE_NUM));
+            fprintf(stderr, "\r[%3d / 100]",(count*100/STATE_NUM));
             for(w3 = w2 + 1; w3 < 25; w3++){
                 for(b1 = 0; b1 < 25; b1++){
                     if(b1 == w1 || b1 == w2 || b1 == w3) continue;
@@ -216,7 +216,7 @@ void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]){
                             
                             //どちらも勝っている状態、ではないとき
                             if( judge_of_white == 0 || judge_of_black == 0){
-                                count++;
+                                
 
                                 black_state_id = encode_board(board,BLACK);
                                 white_state_id = encode_board(board, WHITE);
@@ -266,9 +266,7 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
                         if(b2 == w1 || b2 == w2 || b2 == w3) continue;
                         for(b3 = b2 + 1; b3 < 25; b3++){
                             if(b3 == w1 || b3 == w2 || b3 == w3) continue;
-                            if(w1 == 7 && w2 == 11 && w3 == 16 && b1 == 3 && b2 == 4 && b3 == 6){
-                                printf("hello\n");
-                            }
+                            
 
                             loop_count++;
                             generate_board_from_array(board,board_num_array);
@@ -287,9 +285,7 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
 
                                 unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
                                 
-                                if(!dictionary[518]->key){
-                                    printf("hello\n");
-                                }
+                                
 
                                 black_state_index = hash_search(dictionary, black_state_id);
                                 for (i = 0; i < DATA_LENGTH; i += 1){
