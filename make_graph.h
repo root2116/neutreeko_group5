@@ -9,7 +9,9 @@
 //------------------------------------------------
 #define STATE_NUM 7081032
 #define END 0
- 
+#define BLACK_INIT_STATE_ID 679486132
+#define WHITE_INIT_STATE_ID 2826969780
+
 //------------------------------------------------
 //  型定義(Type definition)
 //------------------------------------------------
@@ -29,6 +31,12 @@ unsigned int relative_move(int board[5][5], Point cur, Vector move_vec, int turn
 unsigned int* generate_next_state_ids(unsigned int state_id);
 
 void make_graph(DataItem **graph_table, DataItem **inv_graph_table, DataItem **condition_table);
+
+void remove_unreachable_states(DataItem **graph_table);
+
+void graph_search(DataItem **seen, unsigned int init_state_id, DataItem **graph_table);
+
+void recursive_delete(DataItem **seen, DataItem *data_item, DataItem **graph_table);
 
 void save_table(DataItem **table, char *file_path);
 

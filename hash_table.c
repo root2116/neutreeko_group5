@@ -83,7 +83,7 @@ int hash_delete(DataItem **table, unsigned int key)
     target = table[hashval];
     if (target == NULL)
     {
-        fprintf(stderr, "target[%s] is not exist in hash table.\n", key);
+        fprintf(stderr, "target[%u] is not exist in hash table.\n", key);
         return (-1);
     }
     chain = target->next;

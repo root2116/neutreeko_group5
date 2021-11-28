@@ -338,38 +338,45 @@ int main(int argc,char *argv[]){
 
     // make_graph
 
-    make_graph(graph_table, inv_graph_table,condition_table);
+    // make_graph(graph_table, inv_graph_table,condition_table);
 
-    printf("Saving...\n");
+    // printf("Saving...\n");
 
-    save_table(graph_table, "graph_table.dat");
-    save_table(inv_graph_table, "inv_graph_table.dat");
-    save_table(condition_table, "condition_table.dat");
+    // save_table(graph_table, "graph_table.dat");
+    // save_table(inv_graph_table, "inv_graph_table.dat");
+    // save_table(condition_table, "condition_table.dat");
    
-    printf("Saved!\n");
+    // printf("Saved!\n");
 
     
-    printf("the number of data_items in black_table : %d\n",count_data_items(graph_table));
-    reconstruct_graph_from_file(revived_graph_table,"graph_table.dat");
-    printf("the number of data_items in revived_black_table : %d\n", count_data_items(revived_graph_table));
+    // printf("the number of data_items in graph_table : %d\n",count_data_items(graph_table));
 
+    reconstruct_graph_from_file(graph_table,"graph_table.dat");
     
-    //is_same_table
-    assert(is_same_table(graph_table,graph_table));
+    printf("the number of data_items in graph_table : %d\n", count_data_items(graph_table));
+
+    remove_unreachable_states(graph_table);
+
+    printf("the number of data_items in graph_table : %d\n", count_data_items(graph_table));
+
+    save_table(graph_table,"graph_table2.dat");
+    // //is_same_table
+    // assert(is_same_table(graph_table,graph_table));
   
-    //reconstruct_graph_from_file
-    assert(is_same_table(graph_table,revived_graph_table));
+    // //reconstruct_graph_from_file
+    // assert(is_same_table(graph_table,revived_graph_table));
+
 
 
     //edge_num_table
     
-    edge_num_count(inv_graph_table,edge_num_table);
-    printf("edge_num_count finished\n");
+    // edge_num_count(inv_graph_table,edge_num_table);
+    // printf("edge_num_count finished\n");
 
 
     //cal_best
-    calculate_best(graph_table,inv_graph_table,condition_table,edge_num_table,best_table);
-    printf("calculate_best finished\n");
+    // calculate_best(graph_table,inv_graph_table,condition_table,edge_num_table,best_table);
+    // printf("calculate_best finished\n");
 
     //-----------------------------------------------------------------------
 

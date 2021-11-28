@@ -2,6 +2,7 @@
 #include "make_graph.h"
 #include "hash_table.h"
 #include "main.h"
+#include "queue.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -272,6 +273,65 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
 
     
     
+}
+
+
+void remove_unreachable_states(DataItem **graph_table){
+    DataItem *seen = calloc(SIZE, sizeof(DataItem));
+
+    hash_init((DataItem**)seen);
+    graph_search((DataItem**)seen,BLACK_INIT_STATE_ID,graph_table);
+
+    graph_search((DataItem**)seen,WHITE_INIT_STATE_ID,graph_table);
+
+    for(int i = 0; i < SIZE; i++){
+        recursive_delete((DataItem**)seen,graph_table[i], graph_table);
+    }
+
+    free(seen);
+}
+
+
+void graph_search(DataItem **seen, unsigned int init_state_id, DataItem **graph_table){
+
+    Queue *queue = malloc(sizeof(Queue));
+    queue_init(queue);
+
+
+    unsigned int seen_data[DATA_LENGTH] = {};
+    seen_data[0] = 1; 
+    hash_insert(seen, init_state_id,seen_data);
+
+    enqueue(queue,init_state_id);
+    
+
+    while(!queue_empty(queue)){
+        unsigned int state_id = dequeue(queue);
+
+        unsigned int *data = hash_search(graph_table,state_id);
+        for(int i = 0; i < DATA_LENGTH; i++){
+            if(data[i] == END) break;
+
+            if(hash_search(seen,data[i]) != NULL) continue;
+
+            hash_insert(seen,data[i],seen_data);
+            enqueue(queue,data[i]);
+            
+        }
+    }
+
+    
+
+
+}
+
+void recursive_delete(DataItem **seen, DataItem *data_item, DataItem **graph_table){
+    if(data_item == NULL) return;
+
+    if(hash_search(seen,data_item->key) == NULL){
+        hash_delete(graph_table,data_item->key);
+        recursive_delete(seen, data_item->next, graph_table);
+    }
 }
 
 void save_table(DataItem **table,char* file_path){
