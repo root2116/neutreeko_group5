@@ -182,7 +182,7 @@ unsigned int* generate_next_state_ids(unsigned int state_id){
 }
 
 
-void make_dictionary(DataItem **dictionary){
+void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]){
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
@@ -222,8 +222,11 @@ void make_dictionary(DataItem **dictionary){
                                 white_state_id = encode_board(board, WHITE);
 
                                 hash_insert(dictionary, black_state_id, count);
+                                inv_dictionary[count] = black_state_id;
                                 count += 1;
+
                                 hash_insert(dictionary, white_state_id, count);
+                                inv_dictionary[count] = white_state_id;
                                 count += 1;
                             }
                         }
