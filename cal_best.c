@@ -6,95 +6,80 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-unsigned int checked_id_table[SIZE];
-unsigned int to_check_id_table[SIZE];
+int checked_index_table[SIZE];
+int to_check_index_table[SIZE];
+unsigned int next_condition_table[SIZE][3];
+unsigned int max_edges_to_end_table[SIZE];
 
-void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table, DataItem **best_table){
-    DataItem *next_condition_table = malloc(sizeof(DataItem)*SIZE);
-    DataItem *max_edges_to_end_table = malloc(sizeof(DataItem)*SIZE);
-    
+void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsigned int graph_table[SIZE][DATA_LENGTH],
+                    unsigned int inv_graph_table[SIZE][DATA_LENGTH], unsigned int condition_array[SIZE], 
+                    unsigned int edge_num_array[SIZE], unsigned int best_table[SIZE]){
 
-    void hash_init(next_condition_table);
-    void hash_init(max_transition_end_table);
-    void hash_init(best_table);
-
-    int w1,w2,w3,b1,b2,b3;
-    int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
-    int board[5][5] = {};
-    int now_id = 0;
-    int turn;
-    unsigned int empty_data[DATA_LENGTH] = {};
-
-    for(w1 = 0; w1 < 25; w1++){
-        for(w2 = w1 + 1; w2 < 25; w2++){
-            for(w3 = w2 + 1; w3 < 25; w3++){
-                for(b1 = 0; b1 < 25; b1++){
-                    if(b1 == w1 || b1 == w2 || b1 == w3) continue;
-                    for(b2 = b1 + 1; b2 < 25; b2++){
-                        if(b2 == w1 || b2 == w2 || b2 == w3) continue;
-                        for(b3 = b2 + 1; b3 < 25; b3++){
-                            if(b3 == w1 || b3 == w2 || b3 == w3) continue;
-                            for(turn = 1; turn < 3; turn += 1){
-                            
-                                generate_board_from_array(board,board_num_array);
-                                now_id = encode_board(board, turn);
-                                
-                                hash_insert((DataItem**)next_condition_table, now_id, empty_data);
-                                hash_insert((DataItem**)max_edges_to_end_table, now_id,empty_data);
-                                hash_insert(best_table, now_id,empty_data);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-
-    
-
-
+    //to_check_index_table(初期状態)　の作成（勝敗が確定しているものをぶち込む）
     int i = 0;
     int j = 0;
-    int next_id = 0;
-    
     int c = 0;
+
+    for (i = 0; i < SIZE; i += 1){//-1で初期化
+        to_check_index_table[i] = -1;
+        checked_index_table[i] = -1;
+    }
+    for (i = 0; i < SIZE; i += 1){
+        if (condition_array[i] != 1){
+            to_check_index_table[c] = i;
+            c += 1;
+        }
+    }
+ 
+
+
+    int now_index = 0;
+    unsigned int now_id = 0;
+    int next_index = 0;
+    unsigned int next_id = 0;
+    int to_check_id = 0;
+    unsigned to_check_index = 0;
     int layer = 1;
-    while(to_check_id_table[0] != 0){
+   
+    while(to_check_index_table[0] != -1){//to_check_index_tableが空になるまでループ
+        //to_check_index_tableの中身をchecked_index_tableに移す
         for (i = 0; i < SIZE; i += 1){
-            checked_id_table[i] = to_check_id_table[i];
-            if (to_check_id_table[i] == 0){
+            checked_index_table[i] = to_check_index_table[i];
+            if (to_check_index_table[i] == -1){
                 break;
             }
         }
+        //checked_index_tableの中身について、その1個前のマスの勝敗が確定するかをチェック
         c = 0;
         for (i = 0; i < SIZE; i += 1){
-            if (to_check_id_table[i] == 0){
+            if (checked_index_table[i] == -1){
                 break;
             }
-            now_id = to_check_id_table[i];
+            now_index = checked_index_table[i];//checked_index_tableの中身
             for (j = 0; j < DATA_LENGTH; j += 1){
-                next_id = hash_search(inv_graph_table,checked_id_table[i])[j];
-                if (next_id == 0){
+                to_check_id = inv_graph_table[now_index][j];
+                if (to_check_id == 0){
                     break;
                 }
-                
-                if (hash_search(condition_table,now_id)[0] == 0){
-                    hash_search((DataItem**)next_condition_table,now_id)[hash_search(condition_table,now_id)[0]] += 1;
-                    if (hash_search((DataItem**)next_condition_table,now_id)[0] > 0){
-                        hash_search(condition_table,now_id)[0] = 1;
-                        to_check_id_table[c] = now_id;
+                to_check_index = hash_search(dictionary,to_check_id);//checked_index_tableの中身に遷移出来る状態
+                if (condition_array[to_check_index] == 1){//その状態の勝敗が未確定（引き分け）だったならこれから勝敗が決まるかをチェック
+                    //next_condition_array[to_check_index][0]:to_check_indexから遷移できる状態のうち相手から見て負けの状態の数
+                    //next_condition_array[to_check_index][0]:to_check_indexから遷移できる状態のうち相手から見て引き分けの状態の数
+                    //next_condition_array[to_check_index][0]:to_check_indexから遷移できる状態のうち相手から見て勝ちの状態の数
+                    next_condition_table[to_check_index][condition_array[now_index]] += 1;
+                    if (next_condition_table[to_check_index][0] > 0){//遷移先に相手の負け状態が1つでもあれば勝ち
+                        condition_array[to_check_index] = 2;
+                        to_check_index_table[c] = to_check_index;//新たに勝敗が確定したのでこの状態にたどり着く状態をこれからチェック
                         c += 1;
-                        hash_search((DataItem **)max_edges_to_end_table, now_id)[0] = layer;
+                        max_edges_to_end_table[to_check_index] = layer;
                     }
-                    else if (hash_search((DataItem**)next_condition_table,now_id)[2] == hash_search(edge_num_table,now_id)[0]  /*　==要素数*/){
-                        hash_search(condition_table,now_id)[0] = -1;
-                        to_check_id_table[c] = now_id;
+                    else if (next_condition_table[to_check_index][2] == edge_num_array[to_check_index]){
+                        //遷移先のすべてが相手の勝ちなら負け
+                        condition_array[to_check_index] = 0;
+                        to_check_index_table[c] = to_check_index;
                         c += 1;
-                        hash_search((DataItem **)max_edges_to_end_table, now_id)[0] = -layer;
+                        max_edges_to_end_table[to_check_index] = -layer;
                     }
-                    
                 }
             }
         }
@@ -103,86 +88,73 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
 
 
     int best_id = 0;
-    int tmp_max_transition_end = 0;
+    int tmp_max_transition_to_end = 0;
+    
 
+    //indexを走査することで全状態を走査
+    for (i = 0; i < SIZE; i += 1){
+        now_id = inv_dictionary[i];
+        now_index = hash_search(dictionary,now_id);
 
-    for(w1 = 0; w1 < 25; w1++){
-        for(w2 = w1 + 1; w2 < 25; w2++){
-            for(w3 = w2 + 1; w3 < 25; w3++){
-                for(b1 = 0; b1 < 25; b1++){
-                    if(b1 == w1 || b1 == w2 || b1 == w3) continue;
-                    for(b2 = b1 + 1; b2 < 25; b2++){
-                        if(b2 == w1 || b2 == w2 || b2 == w3) continue;
-                        for(b3 = b2 + 1; b3 < 25; b3++){
-                            if(b3 == w1 || b3 == w2 || b3 == w3) continue;
-                            for (turn = 1; turn < 3; turn += 1){
-                                generate_board_from_array(board,board_num_array);
-                                now_id = encode_board(board, turn);
-
-                                /*勝ち盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
-                                if (hash_search(condition_table,now_id)[0] == 1){
-                                    best_id = 0;
-                                    tmp_max_transition_end = -SIZE;
-
-                                    for (j = 0; j < DATA_LENGTH; j += 1){
-                                        next_id = hash_search(graph_table,now_id)[j];
-                                        if (next_id == 0){
-                                            break;
-                                        }
-                                        if (hash_search(condition_table,next_id)[0] == -1){
-                                            if (hash_search((DataItem**)max_edges_to_end_table,next_id)[0] > tmp_max_transition_end){
-                                                tmp_max_transition_end = hash_search((DataItem **)max_edges_to_end_table, next_id)[0];
-                                                best_id = next_id;
-                                            }
-                                        }   
-                                    }
-                                    hash_search(best_table,now_id)[0] = best_id;
-                                }
-                                /*負け盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
-                                else if (hash_search(condition_table,now_id)[0] == -1){
-                                    best_id = 0;
-                                    tmp_max_transition_end = -SIZE;
-
-                                    for (j = 0; j < DATA_LENGTH; j += 1){
-                                        next_id = hash_search(graph_table,now_id)[j];
-                                        if (next_id == 0){
-                                            break;
-                                        }
-                                        if (hash_search(condition_table,next_id)[0] == 1){
-                                            if (hash_search((DataItem**)max_edges_to_end_table,next_id)[0] > tmp_max_transition_end){
-                                                tmp_max_transition_end = hash_search((DataItem**)max_edges_to_end_table,next_id)[0];
-                                                best_id = next_id;
-                                            }
-                                        }else{
-                                        printf("err");
-                                        }
-                                    }
-                                    hash_search(best_table,now_id)[0] = best_id;
-                                }
-                                else{
-                                    best_id = 0;
-                                    tmp_max_transition_end = -SIZE;
-
-                                    for (j = 0; j < DATA_LENGTH; j += 1){
-                                        next_id = hash_search(graph_table,now_id)[j];
-                                        if (next_id == 0){
-                                            break;
-                                        }
-                                        if (hash_search(condition_table,next_id)[0] == 0){
-                                            tmp_max_transition_end = hash_search((DataItem**)max_edges_to_end_table,next_id)[0];
-                                            best_id = next_id;
-                                        }
-                                    }
-                                    hash_search(best_table,now_id)[0] = best_id;
-                                }
-                            }
-                        }
-                    }
+        /*勝ち盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
+        if (condition_array[now_index] == 2){
+            best_id = 0;
+            tmp_max_transition_to_end = SIZE;
+            //遷移先の状態を確認
+            for (j = 0; j < DATA_LENGTH; j += 1){
+                next_id = graph_table[j];//next_id:遷移先
+                if (next_id == 0){
+                    break;
                 }
+                next_index = hash_search(dictionary,next_id);
+                if (condition_array[next_id] == 0){//遷移先が相手視点で負けなら・・・
+                    if (max_edges_to_end_table[next_id] < tmp_max_transition_to_end){
+                        tmp_max_transition_to_end = max_edges_to_end_table[next_id];
+                        best_id = next_id;
+                    }
+                }   
             }
+            best_table[now_id] = best_id;
+        }
+        /*負け盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
+        else if (condition_array[now_index] == 0){
+            best_id = 0;
+            tmp_max_transition_to_end = SIZE;
+
+            for (j = 0; j < DATA_LENGTH; j += 1){
+                next_id = graph_table[j];
+                if (next_id == 0){
+                    break;
+                }
+                next_index = hash_search(dictionary,next_id);
+                if (condition_array[next_id] == 2){
+                    if (max_edges_to_end_table[next_id] < tmp_max_transition_to_end){
+                        tmp_max_transition_to_end = max_edges_to_end_table[next_id];
+                        best_id = next_id;
+                    }
+                } else{//負け盤面なら遷移先全てが相手の勝ち盤面のはず
+                    printf("err");
+                }  
+            }
+            best_table[now_id] = best_id;
+        }
+        else{
+            best_id = 0;
+            tmp_max_transition_to_end = SIZE;
+
+            for (j = 0; j < DATA_LENGTH; j += 1){
+                next_id = graph_table[j];
+                if (next_id == 0){
+                    break;
+                }
+                next_index = hash_search(dictionary,next_id);
+                if (condition_array[next_id] == 1){//引き分け盤面なら適当に遷移
+                    tmp_max_transition_to_end = max_edges_to_end_table[next_id];
+                    best_id = next_id;  
+                    break;
+                }  
+            }
+            best_table[now_id] = best_id;
         }
     }
-    free(next_condition_table);
-    free(max_edges_to_end_table);
-   
 }
