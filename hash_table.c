@@ -25,7 +25,7 @@ int get_hash_value(unsigned int key)
     return key % SIZE;
 }
 
-unsigned int *hash_search(DataItem **table, unsigned int key)
+unsigned int hash_search(DataItem **table, unsigned int key)
 {
     int hashval = get_hash_value(key);
     DataItem *target = table[hashval];
@@ -41,7 +41,7 @@ unsigned int *hash_search(DataItem **table, unsigned int key)
     return NULL;
 }
 
-int hash_insert(DataItem **table, unsigned int key, unsigned int *data)
+int hash_insert(DataItem **table, unsigned int key, unsigned int data)
 {
     DataItem *p = NULL;
     int hashval = 0;
@@ -61,9 +61,8 @@ int hash_insert(DataItem **table, unsigned int key, unsigned int *data)
     }
     p->key = key;
 
-    for (int i = 0; i < DATA_LENGTH; i++){
-        p->data[i] = data[i];
-    }
+    
+    p->data = data;
 
     hashval = get_hash_value(key);
     p->next = table[hashval];
@@ -111,25 +110,4 @@ int hash_delete(DataItem **table, unsigned int key)
     }
 
     return (-1);
-}
-
-void hash_append_data(DataItem **table, unsigned int key, unsigned int new_id){
-    unsigned int *data = hash_search(table,key);
-    if(data == NULL){
-        unsigned int *new_data = malloc(sizeof(int) * DATA_LENGTH);
-
-        for(int i = 0; i < DATA_LENGTH; i++){
-            new_data[i] = END;
-        }
-        new_data[0] = new_id;
-        hash_insert(table, key, new_data);
-    }else{
-        for(int i = 0; i < DATA_LENGTH; i++){
-            if(data[i] == END){
-                data[i] = new_id;
-                break;
-        }
-    }
-    }
-   
 }

@@ -15,7 +15,7 @@
 //------------------------------------------------
 struct DataItem
 {
-    unsigned int data[DATA_LENGTH];
+    unsigned int data;
     unsigned int key;
     struct DataItem *next;
 };
@@ -27,13 +27,11 @@ typedef struct DataItem DataItem;
 
 void hash_init(DataItem **table);
 
-
-
 int get_hash_value(unsigned int key);
 
-unsigned int* hash_search(DataItem **table, unsigned int key);
+unsigned int hash_search(DataItem **table, unsigned int key);
 
-int hash_insert(DataItem **table, unsigned int key, unsigned int *data);
+int hash_insert(DataItem **table, unsigned int key, unsigned int data);
 
 int hash_delete(DataItem **table, unsigned int key);
 
