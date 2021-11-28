@@ -40,15 +40,19 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
     int to_check_id = 0;
     unsigned to_check_index = 0;
     int layer = 1;
+
+    int count = 0;
    
     while(to_check_index_table[0] != -1){//to_check_index_tableが空になるまでループ
         //to_check_index_tableの中身をchecked_index_tableに移す
         for (i = 0; i < SIZE; i += 1){
             checked_index_table[i] = to_check_index_table[i];
+            count += 1;
             if (to_check_index_table[i] == -1){
                 break;
             }
         }
+        printf("%d\n", count);
         //checked_index_tableの中身について、その1個前のマスの勝敗が確定するかをチェック
         c = 0;
         for (i = 0; i < SIZE; i += 1){
