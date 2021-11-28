@@ -12,6 +12,10 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
     DataItem *max_transition_end_table = malloc(sizeof(DataItem)*SIZE);
     DataItem *best_table = malloc(sizeof(DataItem)*SIZE);
 
+    void hash_init(next_condition_table);
+    void hash_init(max_transition_end_table);
+    void hash_init(best_table);
+
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
     int board[5][5] = {};
