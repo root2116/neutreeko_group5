@@ -182,7 +182,7 @@ unsigned int* generate_next_state_ids(unsigned int state_id){
 }
 
 
-void make_dictionary(DataItem **dictionary){
+void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]){
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
@@ -222,8 +222,11 @@ void make_dictionary(DataItem **dictionary){
                                 white_state_id = encode_board(board, WHITE);
 
                                 hash_insert(dictionary, black_state_id, count);
+                                inv_dictionary[count] = black_state_id;
                                 count += 1;
+
                                 hash_insert(dictionary, white_state_id, count);
+                                inv_dictionary[count] = white_state_id;
                                 count += 1;
                             }
                         }
@@ -294,8 +297,8 @@ void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGT
                                 }
 
                                 // その色が勝っていれば2が,負けていれば0が、引き分け1
-                                condition_array[black_state_index] = (judge_of_black - judge_of_white)/2 + 1;
-                                condition_array[white_state_index] = -(judge_of_black - judge_of_white)/2 + 1;
+                                condition_array[black_state_index] = (judge_of_black - judge_of_white) + 1;
+                                condition_array[white_state_index] = -(judge_of_black - judge_of_white) + 1;
                                 
                             }
                         }
@@ -303,6 +306,18 @@ void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGT
                 }
             }
         }    
+    }
+    int end_count[SIZE];
+    unsigned int from_key;
+    int to_index;
+    for (i = 0; i < SIZE; i += 1){
+        for (j = 0; j < DATA_LENGTH; j += 1){//i(index)からgraph[i][j](key)に遷移する
+        //inv_graphにgraph[i][j](index)からi(key)への辺を張る
+            from_key = inv_dictionary[i];
+            to_index = hash_search(dictionary ,graph_table[i][j]);
+            inv_graph_table[to_index][end_count[to_index]] = from_key;
+            end_count[to_index] += 1;
+        }
     }
     printf("\nDone!\n");    
 }
