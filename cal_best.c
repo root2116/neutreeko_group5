@@ -52,6 +52,9 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
                 break;
             }
         }
+        for (i = 0; i < SIZE; i += 1){//to_check_tableを-1で初期化
+            to_check_index_table[i] = -1;
+        }
         printf("%d\n", count);
         //checked_index_tableの中身について、その1個前のマスの勝敗が確定するかをチェック
         c = 0;
