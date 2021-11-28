@@ -60,8 +60,6 @@ int hash_insert(DataItem **table, unsigned int key, unsigned int data)
         return (-1);
     }
     p->key = key;
-
-    
     p->data = data;
 
     hashval = get_hash_value(key);

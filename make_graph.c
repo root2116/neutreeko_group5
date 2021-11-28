@@ -220,6 +220,9 @@ void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]){
 
                                 black_state_id = encode_board(board,BLACK);
                                 white_state_id = encode_board(board, WHITE);
+                                if (black_state_id == 42486812){
+                                    printf("hello\n");
+                                }
 
                                 hash_insert(dictionary, black_state_id, count);
                                 inv_dictionary[count] = black_state_id;
@@ -263,6 +266,10 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
                         if(b2 == w1 || b2 == w2 || b2 == w3) continue;
                         for(b3 = b2 + 1; b3 < 25; b3++){
                             if(b3 == w1 || b3 == w2 || b3 == w3) continue;
+                            if(w1 == 7 && w2 == 11 && w3 == 16 && b1 == 3 && b2 == 4 && b3 == 6){
+                                printf("hello\n");
+                            }
+
                             loop_count++;
                             generate_board_from_array(board,board_num_array);
 
@@ -279,6 +286,11 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
                                 
 
                                 unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
+                                
+                                if(!dictionary[518]->key){
+                                    printf("hello\n");
+                                }
+
                                 black_state_index = hash_search(dictionary, black_state_id);
                                 for (i = 0; i < DATA_LENGTH; i += 1){
                                     if (next_state_ids_for_black[i] == END){
@@ -288,7 +300,7 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
                                 }
 
                                 unsigned int *next_state_ids_for_white = generate_next_state_ids(white_state_id);
-                                white_state_index = hash_search(dictionary ,white_state_id);
+                                white_state_index = hash_search(dictionary,white_state_id);
                                 for (i = 0; i < DATA_LENGTH; i += 1){
                                     if (next_state_ids_for_white[i] == END){
                                         break;
@@ -307,7 +319,7 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
             }
         }    
     }
-    int end_count[SIZE];
+    int *end_index = malloc(sizeof(int)*SIZE);
     unsigned int from_key;
     int to_index;
     for (int i = 0; i < SIZE; i += 1){
@@ -315,76 +327,78 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
         //inv_graphにgraph[i][j](index)からi(key)への辺を張る
             from_key = inv_dictionary[i];
             to_index = hash_search(dictionary ,graph_table[i][j]);
-            inv_graph_table[to_index][end_count[to_index]] = from_key;
-            end_count[to_index] += 1;
+            inv_graph_table[to_index][end_index[to_index]] = from_key;
+            end_index[to_index] += 1;
         }
     }
+
+    free(end_index);
     printf("\nDone!\n");    
 }
 
 
 
-void remove_unreachable_states(DataItem **graph_table,DataItem **condition_table){
-    DataItem *seen = calloc(SIZE, sizeof(DataItem));
+// void remove_unreachable_states(DataItem **graph_table,DataItem **condition_table){
+//     DataItem *seen = calloc(SIZE, sizeof(DataItem));
 
-    hash_init((DataItem**)seen);
-    graph_search((DataItem**)seen,BLACK_INIT_STATE_ID,graph_table);
+//     hash_init((DataItem**)seen);
+//     graph_search((DataItem**)seen,BLACK_INIT_STATE_ID,graph_table);
 
-    graph_search((DataItem**)seen,WHITE_INIT_STATE_ID,graph_table);
+//     graph_search((DataItem**)seen,WHITE_INIT_STATE_ID,graph_table);
 
-    for(int i = 0; i < SIZE; i++){
+//     for(int i = 0; i < SIZE; i++){
         
-        recursive_delete((DataItem**)seen,graph_table[i], graph_table,condition_table);
-    }
+//         recursive_delete((DataItem**)seen,graph_table[i], graph_table,condition_table);
+//     }
 
-    free(seen);
-}
-
-
-void graph_search(DataItem **seen, unsigned int init_state_id, DataItem **graph_table){
-
-    Queue *queue = malloc(sizeof(Queue));
-    queue_init(queue);
+//     free(seen);
+// }
 
 
-    unsigned int seen_data[DATA_LENGTH] = {};
-    seen_data[0] = 1; 
-    hash_insert(seen, init_state_id,seen_data);
+// void graph_search(DataItem **seen, unsigned int init_state_id, DataItem **graph_table){
 
-    enqueue(queue,init_state_id);
+//     Queue *queue = malloc(sizeof(Queue));
+//     queue_init(queue);
+
+
+//     unsigned int seen_data[DATA_LENGTH] = {};
+//     seen_data[0] = 1; 
+//     hash_insert(seen, init_state_id,1);
+
+//     enqueue(queue,init_state_id);
     
 
-    while(!queue_empty(queue)){
-        unsigned int state_id = dequeue(queue);
+//     while(!queue_empty(queue)){
+//         unsigned int state_id = dequeue(queue);
         
-            unsigned int *data = hash_search(graph_table, state_id);
-        for(int i = 0; i < DATA_LENGTH; i++){
-            if(data[i] == END) break;
+//             unsigned int *data = hash_search(graph_table, state_id);
+//         for(int i = 0; i < DATA_LENGTH; i++){
+//             if(data[i] == END) break;
 
-            if(hash_search(seen,data[i]) != NULL) continue;
+//             if(hash_search(seen,data[i]) != NULL) continue;
 
-            hash_insert(seen,data[i],seen_data);
-            enqueue(queue,data[i]);
+//             hash_insert(seen,data[i],seen_data);
+//             enqueue(queue,data[i]);
             
-        }
-    }
+//         }
+//     }
 
     
 
 
-}
+// }
 
-void recursive_delete(DataItem **seen, DataItem *data_item, DataItem **graph_table, DataItem **condition_table){
-    if(data_item == NULL) return;
+// void recursive_delete(DataItem **seen, DataItem *data_item, DataItem **graph_table, DataItem **condition_table){
+//     if(data_item == NULL) return;
    
-    if (hash_search(seen, data_item->key) == NULL)
-    {
-        hash_delete(graph_table, data_item->key);
-        hash_delete(condition_table, data_item->key);
+//     if (hash_search(seen, data_item->key) == NULL)
+//     {
+//         hash_delete(graph_table, data_item->key);
+//         hash_delete(condition_table, data_item->key);
         
-    }
-    recursive_delete(seen, data_item->next, graph_table, condition_table);
-}
+//     }
+//     recursive_delete(seen, data_item->next, graph_table, condition_table);
+// }
 
 void save_hash_table(DataItem **table,char* file_path){
     FILE *fpw = fopen(file_path,"wb");

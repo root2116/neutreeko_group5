@@ -269,6 +269,7 @@ unsigned int condition_array[SIZE];
 unsigned int edge_num_array[SIZE];
 unsigned int best_array[SIZE];
 DataItem *dict[SIZE];
+unsigned int inv_dict[SIZE];
 
 int main(int argc,char *argv[]){
 
@@ -285,15 +286,17 @@ int main(int argc,char *argv[]){
     
     
 
-    
+    for(int i = 0; i < SIZE; i++){
+        condition_array[i] = 1;
+    }
 
 
-    
+    hash_init(dict);
 
-    make_dictionary(dict);
+    make_dictionary(dict,inv_dict);
     // make_graph
 
-    make_graph(dict,graph_table, inv_graph_table,condition_array);
+    make_graph(dict,inv_dict,graph_table, inv_graph_table,condition_array);
 
     // 
     
