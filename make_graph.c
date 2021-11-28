@@ -240,7 +240,7 @@ void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]){
 
 
 
-void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGTH] ,unsigned int condition_array[]){
+void make_graph(DataItem **dictionary, unsigned int inv_dictionary[],unsigned int graph_table[SIZE][DATA_LENGTH], unsigned int inv_graph_table[SIZE][DATA_LENGTH] ,unsigned int condition_array[]){
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
@@ -248,6 +248,7 @@ void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGT
     int black_state_index = 0;
     int white_state_index = 0;
     int i;
+    int j;
     int count = 0;
     
 
@@ -297,8 +298,8 @@ void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGT
                                 }
 
                                 // その色が勝っていれば2が,負けていれば0が、引き分け1
-                                condition_array[black_state_index] = (judge_of_black - judge_of_white)/2 + 1;
-                                condition_array[white_state_index] = -(judge_of_black - judge_of_white)/2 + 1;
+                                condition_array[black_state_index] = (judge_of_black - judge_of_white) + 1;
+                                condition_array[white_state_index] = -(judge_of_black - judge_of_white) + 1;
                                 
                             }
                         }
@@ -306,6 +307,18 @@ void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGT
                 }
             }
         }    
+    }
+    int end_count[SIZE];
+    unsigned int from_key;
+    int to_index;
+    for (i = 0; i < SIZE; i += 1){
+        for (j = 0; j < DATA_LENGTH; j += 1){//i(index)からgraph[i][j](key)に遷移する
+        //inv_graphにgraph[i][j](index)からi(key)への辺を張る
+            from_key = inv_dictionary[i];
+            to_index = hash_search(dictionary ,graph_table[i][j]);
+            inv_graph_table[to_index][end_count[to_index]] = from_key;
+            end_count[to_index] += 1;
+        }
     }
     printf("\nDone!\n");    
 }
