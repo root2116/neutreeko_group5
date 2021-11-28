@@ -14,7 +14,9 @@
 //  プロトタイプ宣言(Prototype declaration)
 //------------------------------------------------
 
-void calculate_best(DataItem **graph_table, DataItem **inv_graph_table, DataItem **condition_table, DataItem **edge_num_table, DataItem **best_table);
+void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsigned int graph_table[SIZE][DATA_LENGTH],
+                    unsigned int inv_graph_table[SIZE][DATA_LENGTH], unsigned int condition_array[SIZE],
+                    unsigned int edge_num_array[SIZE], unsigned int best_array[SIZE]);
 
 //------------------------------------------------
 #endif

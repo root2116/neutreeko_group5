@@ -1,5 +1,5 @@
 CMD= main
-SRCS= main.c make_graph.c hash_table.c test_util.c queue.c
+SRCS= main.c make_graph.c hash_table.c test_util.c queue.c cal_best.c
 OBJS= $(SRCS:.c=.o)
 
 CFLAGS+=-g

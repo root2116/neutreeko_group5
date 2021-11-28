@@ -454,7 +454,7 @@ void reconstruct_hash_table_from_file(DataItem **table, char* file_path){
 void reconstruct_int_table_from_file(unsigned int table[][DATA_LENGTH], char* file_path){
     FILE *fpr = fopen(file_path, "rb");
 
-    fread(&table,sizeof(int),SIZE*DATA_LENGTH,fpr);
+    fread(table,sizeof(int),SIZE*DATA_LENGTH,fpr);
 
     fclose(fpr);
 }
@@ -462,7 +462,7 @@ void reconstruct_int_table_from_file(unsigned int table[][DATA_LENGTH], char* fi
 void reconstruct_int_array_from_file(unsigned int array[], char* file_path){
     FILE *fpr = fopen(file_path, "rb");
 
-    fread(&array, sizeof(int), SIZE, fpr);
+    fread(array, sizeof(int), SIZE, fpr);
 
     fclose(fpr);
 }
@@ -479,6 +479,7 @@ void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH]
     }
     
 }
+
 
 
 

@@ -293,10 +293,10 @@ int main(int argc,char *argv[]){
 
     hash_init(dict);
 
-    make_dictionary(dict,inv_dict);
+    // make_dictionary(dict,inv_dict);
     // make_graph
 
-    make_graph(dict,inv_dict,graph_table, inv_graph_table,condition_array);
+    // make_graph(dict,inv_dict,graph_table, inv_graph_table,condition_array);
 
     // 
     
@@ -317,14 +317,14 @@ int main(int argc,char *argv[]){
 
     // compare_table_keys(graph_table, inv_graph_table);
 
-    printf("Saving...\n");
+    // printf("Saving...\n");
 
-    save_int_table(graph_table, "graph_table.dat");
+    // save_int_table(graph_table, "graph_table.dat");
     // save_int_table(inv_graph_table, "inv_graph_table.dat");
-    save_int_array(condition_array, "condition_array.dat");
+    // save_int_array(condition_array, "condition_array.dat");
     
 
-    printf("Saved!\n");
+    // printf("Saved!\n");
 
     // //is_same_table
     // assert(is_same_table(graph_table,graph_table));
@@ -332,6 +332,8 @@ int main(int argc,char *argv[]){
     // //reconstruct_graph_from_file
     // assert(is_same_table(graph_table,revived_graph_table));
 
+    // 
+    reconstruct_hash_table_from_file(dict,"dict.dat");
     reconstruct_int_table_from_file(graph_table,"graph_table.dat");
     reconstruct_int_table_from_file(inv_graph_table,"inv_graph_table.dat");
     reconstruct_int_array_from_file(condition_array,"condition_array.dat");
@@ -345,8 +347,8 @@ int main(int argc,char *argv[]){
 
 
     //cal_best
-    // calculate_best(graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
-    // printf("calculate_best finished\n");
+    calculate_best(dict,inv_dict,graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
+    printf("calculate_best finished\n");
 
     //-----------------------------------------------------------------------
 
