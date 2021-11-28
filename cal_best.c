@@ -1,4 +1,4 @@
-
+#include "cal_best.h"
 #include "make_graph.h"
 #include "hash_table.h"
 #include "main.h"
@@ -31,8 +31,8 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
                             
                                 generate_board_from_array(board,board_num_array);
                                 now_id = encode_board(board, turn);
-                                hash_insert(&next_condition_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
-                                hash_insert(&max_edges_to_end_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
+                                hash_insert((DataItem**)next_condition_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
+                                hash_insert((DataItem**)max_edges_to_end_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
                                 hash_insert(best_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
                             }
                         }
@@ -74,18 +74,18 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
                 }
                 
                 if (hash_search(condition_table,now_id)[0] == 0){
-                    hash_search(&next_condition_table,now_id)[hash_search(condition_table,now_id)[0]] += 1;
-                    if (hash_search(&next_condition_table,now_id)[0] > 0){
+                    hash_search((DataItem**)next_condition_table,now_id)[hash_search(condition_table,now_id)[0]] += 1;
+                    if (hash_search((DataItem**)next_condition_table,now_id)[0] > 0){
                         hash_search(condition_table,now_id)[0] = 1;
                         to_check_id_table[c] = now_id;
                         c += 1;
-                        hash_search(&max_edges_to_end_table,now_id)[0] = layer;
+                        hash_search((DataItem **)max_edges_to_end_table, now_id)[0] = layer;
                     }
-                    else if (hash_search(&next_condition_table,now_id)[2] == hash_search(edge_num_table,now_id)[0]  /*　==要素数*/){
+                    else if (hash_search((DataItem**)next_condition_table,now_id)[2] == hash_search(edge_num_table,now_id)[0]  /*　==要素数*/){
                         hash_search(condition_table,now_id)[0] = -1;
                         to_check_id_table[c] = now_id;
                         c += 1;
-                        hash_search(&max_edges_to_end_table,now_id)[0] = -layer;
+                        hash_search((DataItem **)max_edges_to_end_table, now_id)[0] = -layer;
                     }
                     
                 }
@@ -123,8 +123,8 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
                                             break;
                                         }
                                         if (hash_search(condition_table,next_id)[0] == -1){
-                                            if (hash_search(&max_edges_to_end_table,next_id)[0] > tmp_max_transition_end){
-                                                tmp_max_transition_end = hash_search(&max_edges_to_end_table,next_id)[0];
+                                            if (hash_search((DataItem**)max_edges_to_end_table,next_id)[0] > tmp_max_transition_end){
+                                                tmp_max_transition_end = hash_search((DataItem **)max_edges_to_end_table, next_id)[0];
                                                 best_id = next_id;
                                             }
                                         }   
@@ -142,8 +142,8 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
                                             break;
                                         }
                                         if (hash_search(condition_table,next_id)[0] == 1){
-                                            if (hash_search(&max_edges_to_end_table,next_id)[0] > tmp_max_transition_end){
-                                                tmp_max_transition_end = hash_search(&max_edges_to_end_table,next_id)[0];
+                                            if (hash_search((DataItem**)max_edges_to_end_table,next_id)[0] > tmp_max_transition_end){
+                                                tmp_max_transition_end = hash_search((DataItem**)max_edges_to_end_table,next_id)[0];
                                                 best_id = next_id;
                                             }
                                         }else{
@@ -162,7 +162,7 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
                                             break;
                                         }
                                         if (hash_search(condition_table,next_id)[0] == 0){
-                                            tmp_max_transition_end = hash_search(&max_edges_to_end_table,next_id)[0];
+                                            tmp_max_transition_end = hash_search((DataItem**)max_edges_to_end_table,next_id)[0];
                                             best_id = next_id;
                                         }
                                     }

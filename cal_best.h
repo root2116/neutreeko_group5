@@ -2,7 +2,6 @@
 #define INCLUDED_CAL_BEST
 //------------------------------------------------
 #include "hash_table.h"
-#include <stdio.h>
 //------------------------------------------------
 //  マクロ定義(Macro definition)
 //------------------------------------------------
@@ -15,7 +14,7 @@
 //  プロトタイプ宣言(Prototype declaration)
 //------------------------------------------------
 
-DataItem **calculate_best(DataItem **graph_table, DataItem **inv_graph_table, DataItem **condition_table, DataItem **edge_num_table, DataItem **best_table);
+void calculate_best(DataItem **graph_table, DataItem **inv_graph_table, DataItem **condition_table, DataItem **edge_num_table, DataItem **best_table);
 
 //------------------------------------------------
 #endif

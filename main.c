@@ -3,6 +3,7 @@
 #include "make_graph.h"
 #include "test_util.h"
 #include "cal_best.h"
+
 #include<stdio.h>
 #include<stdlib.h>
 #include <assert.h>
@@ -265,7 +266,7 @@ DataItem *inv_graph_table[SIZE];
 DataItem *condition_table[SIZE];
 DataItem *edge_num_table[SIZE];
 DataItem *best_table[SIZE];
-DataItem *revived_graph_table[SIZE];
+
 
 
 int main(int argc,char *argv[]){
@@ -280,10 +281,12 @@ int main(int argc,char *argv[]){
     //テスト----------------------------------------------------------------
 
     printf("int: %lu bytes\n",sizeof(int));
+    
     hash_init(graph_table);
     hash_init(inv_graph_table);
     hash_init(condition_table);
-    hash_init(revived_graph_table);
+    hash_init(edge_num_table);
+    hash_init(best_table);
 
     int moves[DATA_LENGTH] = {};
     for(int i = 0; i < DATA_LENGTH; i++){
@@ -340,43 +343,54 @@ int main(int argc,char *argv[]){
 
     // make_graph(graph_table, inv_graph_table,condition_table);
 
-    // printf("Saving...\n");
-
-    // save_table(graph_table, "graph_table.dat");
-    // save_table(inv_graph_table, "inv_graph_table.dat");
-    // save_table(condition_table, "condition_table.dat");
-   
-    // printf("Saved!\n");
-
+    
     
     // printf("the number of data_items in graph_table : %d\n",count_data_items(graph_table));
 
-    reconstruct_graph_from_file(graph_table,"graph_table.dat");
     
-    printf("the number of data_items in graph_table : %d\n", count_data_items(graph_table));
 
-    remove_unreachable_states(graph_table);
+    // printf("the number of data_items in graph_table : %d\n", count_data_items(graph_table));
 
-    printf("the number of data_items in graph_table : %d\n", count_data_items(graph_table));
+    // remove_unreachable_states(graph_table,condition_table);
 
-    save_table(graph_table,"graph_table2.dat");
+
+    // printf("the number of data_items in graph_table : %d\n", count_data_items(graph_table));
+
+    // printf("the number of data_items in inv_graph_table : %d\n", count_data_items(inv_graph_table));
+
+    // printf("the number of data items in condition_tabl : %d\n",count_data_items(condition_table));
+
+    // compare_table_keys(graph_table, inv_graph_table);
+
+    // printf("Saving...\n");
+
+    // save_table(graph_table, "graph_table.dat");
+    // save_table(condition_table, "condition_table.dat");
+    // save_table(inv_graph_table, "inv_graph_table.dat");
+
+    // printf("Saved!\n");
+
     // //is_same_table
     // assert(is_same_table(graph_table,graph_table));
   
     // //reconstruct_graph_from_file
     // assert(is_same_table(graph_table,revived_graph_table));
 
+    reconstruct_table_from_file(graph_table,"graph_table.dat");
+    reconstruct_table_from_file(inv_graph_table,"inv_graph_table.dat");
+    reconstruct_table_from_file(condition_table,"condition_table.dat");
+
 
 
     //edge_num_table
     
-    // edge_num_count(inv_graph_table,edge_num_table);
-    // printf("edge_num_count finished\n");
+    edge_num_count(inv_graph_table,edge_num_table);
+    printf("edge_num_count finished\n");
 
 
     //cal_best
-    // calculate_best(graph_table,inv_graph_table,condition_table,edge_num_table,best_table);
-    // printf("calculate_best finished\n");
+    calculate_best(graph_table,inv_graph_table,condition_table,edge_num_table,best_table);
+    printf("calculate_best finished\n");
 
     //-----------------------------------------------------------------------
 

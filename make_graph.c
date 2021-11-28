@@ -208,52 +208,60 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
 
                             int judge_of_white = judge_one_side(board,WHITE);
                             int judge_of_black = judge_one_side(board,BLACK);
-
+                            
                             //どちらも勝っている状態、ではないとき
                             if( judge_of_white == 0 || judge_of_black == 0){
                                 count++;
 
-                                //黒を動かしたときの遷移先のidの配列を保存
-                                unsigned int black_state_id = encode_board(board,BLACK);
                                 
-                                unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
-                                hash_insert(graph_table,black_state_id,next_state_ids_for_black);
+                                unsigned int black_state_id = encode_board(board,BLACK);
+                                unsigned int white_state_id = encode_board(board, WHITE);
 
-                                for(int i = 0; i < DATA_LENGTH; i++){
-                                    //末尾まで走査する
-                                    if(next_state_ids_for_black[i] == END) break;
-                                    
-                                    
-                                    hash_append_data(inv_graph_table,next_state_ids_for_black[i], black_state_id);
-                                    
+                                
+                                if(judge_of_white == 1 || judge_of_black == 0){
+                                    unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
+                                    hash_insert(graph_table, black_state_id, next_state_ids_for_black);
+
+                                    for (int i = 0; i < DATA_LENGTH; i++){
+                                        //末尾まで走査する
+                                        if (next_state_ids_for_black[i] == END)
+                                            break;
+
+                                        hash_append_data(inv_graph_table, next_state_ids_for_black[i], black_state_id);
+                                    }
+
+                                    // その色が勝っていれば2が,負けていれば0が、引き分け1
+                                    unsigned int black_cond[DATA_LENGTH] = {};
+                                    for (int i = 0; i < DATA_LENGTH; i++){
+                                        black_cond[i] = judge_of_black - judge_of_white + 1;
+                                    }
+
+                                    hash_insert(condition_table, black_state_id, black_cond);
+
                                 }
+                                
+                                if(judge_of_white == 0 || judge_of_black == 1){
+                                    unsigned int *next_state_ids_for_white = generate_next_state_ids(white_state_id);
 
-                                unsigned int white_state_id = encode_board(board,WHITE);
+                                    hash_insert(graph_table, white_state_id, next_state_ids_for_white);
 
-                                unsigned int *next_state_ids_for_white = generate_next_state_ids(white_state_id);
+                                    for (int i = 0; i < DATA_LENGTH; i++){
+                                        //末尾まで走査する
+                                        if (next_state_ids_for_white[i] == END)
+                                            break;
 
-                                hash_insert(graph_table, white_state_id, next_state_ids_for_white);
+                                        hash_append_data(inv_graph_table, next_state_ids_for_white[i], white_state_id);
+                                    }
 
-                                for (int i = 0; i < DATA_LENGTH; i++){
-                                    //末尾まで走査する
-                                    if (next_state_ids_for_white[i] == END)
-                                        break;
 
-                                    hash_append_data(inv_graph_table, next_state_ids_for_white[i], white_state_id);
-                                    
+                                    // その色が勝っていれば2が,負けていれば0が、引き分け1
+                                    unsigned int white_cond[DATA_LENGTH] = {};
+                                    for (int i = 0; i < DATA_LENGTH; i++){
+                                        white_cond[i] = judge_of_white - judge_of_black + 1;
+                                    }
+
+                                    hash_insert(condition_table, white_state_id, white_cond);
                                 }
-
-                                // その色が勝っていれば2が,負けていれば0が、引き分け1
-                                unsigned int black_cond[DATA_LENGTH] = {};
-                                unsigned int white_cond[DATA_LENGTH] = {};
-                                for (int i = 0; i < DATA_LENGTH; i++){
-                                    black_cond[i] = judge_of_black - judge_of_white + 1;
-                                    white_cond[i] = judge_of_white - judge_of_black + 1;
-                                }
-                                hash_insert(condition_table, black_state_id,black_cond );
-                                hash_insert(condition_table, white_state_id, white_cond);
-
-
 
                             }
                         }
@@ -276,7 +284,7 @@ void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **con
 }
 
 
-void remove_unreachable_states(DataItem **graph_table){
+void remove_unreachable_states(DataItem **graph_table,DataItem **condition_table){
     DataItem *seen = calloc(SIZE, sizeof(DataItem));
 
     hash_init((DataItem**)seen);
@@ -285,7 +293,8 @@ void remove_unreachable_states(DataItem **graph_table){
     graph_search((DataItem**)seen,WHITE_INIT_STATE_ID,graph_table);
 
     for(int i = 0; i < SIZE; i++){
-        recursive_delete((DataItem**)seen,graph_table[i], graph_table);
+        
+        recursive_delete((DataItem**)seen,graph_table[i], graph_table,condition_table);
     }
 
     free(seen);
@@ -307,8 +316,8 @@ void graph_search(DataItem **seen, unsigned int init_state_id, DataItem **graph_
 
     while(!queue_empty(queue)){
         unsigned int state_id = dequeue(queue);
-
-        unsigned int *data = hash_search(graph_table,state_id);
+        
+            unsigned int *data = hash_search(graph_table, state_id);
         for(int i = 0; i < DATA_LENGTH; i++){
             if(data[i] == END) break;
 
@@ -325,13 +334,16 @@ void graph_search(DataItem **seen, unsigned int init_state_id, DataItem **graph_
 
 }
 
-void recursive_delete(DataItem **seen, DataItem *data_item, DataItem **graph_table){
+void recursive_delete(DataItem **seen, DataItem *data_item, DataItem **graph_table, DataItem **condition_table){
     if(data_item == NULL) return;
-
-    if(hash_search(seen,data_item->key) == NULL){
-        hash_delete(graph_table,data_item->key);
-        recursive_delete(seen, data_item->next, graph_table);
+   
+    if (hash_search(seen, data_item->key) == NULL)
+    {
+        hash_delete(graph_table, data_item->key);
+        hash_delete(condition_table, data_item->key);
+        
     }
+    recursive_delete(seen, data_item->next, graph_table, condition_table);
 }
 
 void save_table(DataItem **table,char* file_path){
@@ -357,14 +369,17 @@ void recursive_save(DataItem *data_item, FILE *fpw){
     }
 }   
 
-void reconstruct_graph_from_file(DataItem **table, char* file_path){
+void reconstruct_table_from_file(DataItem **table, char* file_path){
     FILE *fpr = fopen(file_path,"rb");
 
     DataItem *data_item = calloc(SIZE,sizeof(DataItem));
 
     for(int i = 0; i < STATE_NUM; i++){
-
+        
         fread(&data_item[i], sizeof(DataItem), 1, fpr);
+        if(data_item[i].key == 0){
+            break;
+        }
         hash_insert(table,data_item[i].key,data_item[i].data);
     }
 

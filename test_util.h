@@ -22,5 +22,7 @@ int is_same_table(DataItem **table1, DataItem **table2);
 
 int count_data_items(DataItem **table);
 
+void compare_table_keys(DataItem **table1, DataItem **table2);
+
 //------------------------------------------------
 #endif
