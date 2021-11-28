@@ -57,7 +57,7 @@ void reconstruct_int_array_from_file(unsigned int array[], char* file_path);
 
 void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH], unsigned int edge_num_array[]);
 
-
+void generate_and_save_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
 
 //------------------------------------------------
 #endif

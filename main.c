@@ -291,7 +291,7 @@ int main(int argc,char *argv[]){
     }
 
 
-    hash_init(dict);
+    
 
     
     // make_graph
