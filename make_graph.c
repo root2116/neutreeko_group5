@@ -181,6 +181,62 @@ unsigned int* generate_next_state_ids(unsigned int state_id){
     return next_state_ids;
 }
 
+
+void make_dictionary(DataItem **dictionary){
+
+    int w1,w2,w3,b1,b2,b3;
+    int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
+    int board[5][5] = {};
+    
+    int count = 0;
+
+    unsigned int black_state_id;
+    unsigned int white_state_id;
+    int judge_of_white;
+    int judge_of_black;
+
+
+    printf("makeing dictionary...\n");
+   
+    for(w1 = 0; w1 < 25; w1++){
+        for(w2 = w1 + 1; w2 < 25; w2++){
+            fprintf(stderr, "\r[%3d / 100]",(2*count*100/STATE_NUM));
+            for(w3 = w2 + 1; w3 < 25; w3++){
+                for(b1 = 0; b1 < 25; b1++){
+                    if(b1 == w1 || b1 == w2 || b1 == w3) continue;
+                    for(b2 = b1 + 1; b2 < 25; b2++){
+                        if(b2 == w1 || b2 == w2 || b2 == w3) continue;
+                        for(b3 = b2 + 1; b3 < 25; b3++){
+                            if(b3 == w1 || b3 == w2 || b3 == w3) continue;
+                        
+                            generate_board_from_array(board,board_num_array);
+
+                            judge_of_white = judge_one_side(board,WHITE);
+                            judge_of_black = judge_one_side(board,BLACK);
+                            
+                            //どちらも勝っている状態、ではないとき
+                            if( judge_of_white == 0 || judge_of_black == 0){
+                                count++;
+
+                                black_state_id = encode_board(board,BLACK);
+                                white_state_id = encode_board(board, WHITE);
+
+                                hash_insert(dictionary, black_state_id, count);
+                                count += 1;
+                                hash_insert(dictionary, white_state_id, count);
+                                count += 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }  
+    }
+    printf("\nDone!\n");  
+}
+
+
+
 void make_graph(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table){
 
     int w1,w2,w3,b1,b2,b3;
