@@ -273,41 +273,37 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
 
                             int judge_of_white = judge_one_side(board,WHITE);
                             int judge_of_black = judge_one_side(board,BLACK);
-                            
-                            //どちらかが勝っている状態、ではないとき(試合継続、遷移あり)
-                            if( judge_of_white == 0 && judge_of_black == 0){
 
-                                
+                            if( judge_of_white == 0 || judge_of_black == 0){//両者勝ちの盤面ではない
+                                // その色が勝っていれば2が,負けていれば0が、引き分け1
                                 unsigned int black_state_id = encode_board(board,BLACK);
                                 unsigned int white_state_id = encode_board(board,WHITE);
-
-                                
-
-                                unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
-                                
-                                
-
                                 black_state_index = hash_search(dictionary, black_state_id);
-                                for (i = 0; i < DATA_LENGTH; i += 1){
-                                    if (next_state_ids_for_black[i] == END){
-                                        break;
-                                    }
-                                    graph_table[black_state_index][i] = next_state_ids_for_black[i];
-                                }
-
-                                unsigned int *next_state_ids_for_white = generate_next_state_ids(white_state_id);
-                                white_state_index = hash_search(dictionary,white_state_id);
-                                for (i = 0; i < DATA_LENGTH; i += 1){
-                                    if (next_state_ids_for_white[i] == END){
-                                        break;
-                                    }
-                                    graph_table[white_state_index][i] = next_state_ids_for_white[i];
-                                }
-                            }
-                            if( judge_of_white == 0 || judge_of_black == 0){
-                                // その色が勝っていれば2が,負けていれば0が、引き分け1
+                                white_state_index = hash_search(dictionary,white_state_id);  
                                 condition_array[black_state_index] = (judge_of_black - judge_of_white) + 1;
                                 condition_array[white_state_index] = -(judge_of_black - judge_of_white) + 1;
+
+                                //どちらかが勝っている状態、ではないとき(試合継続、遷移あり)
+                                if( judge_of_white == 0 && judge_of_black == 0){
+                                    unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
+                                    unsigned int *next_state_ids_for_white = generate_next_state_ids(white_state_id);
+                                    
+                                    for (i = 0; i < DATA_LENGTH; i += 1){
+                                        if (next_state_ids_for_black[i] == END){
+                                            break;
+                                        }
+                                        graph_table[black_state_index][i] = next_state_ids_for_black[i];
+                                    }
+
+                                    
+                                    
+                                    for (i = 0; i < DATA_LENGTH; i += 1){
+                                        if (next_state_ids_for_white[i] == END){
+                                            break;
+                                        }
+                                        graph_table[white_state_index][i] = next_state_ids_for_white[i];
+                                    }
+                                }
                             }
                         }
                     }
