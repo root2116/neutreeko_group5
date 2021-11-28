@@ -220,9 +220,7 @@ void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]){
 
                                 black_state_id = encode_board(board,BLACK);
                                 white_state_id = encode_board(board, WHITE);
-                                if (black_state_id == 42486812){
-                                    printf("hello\n");
-                                }
+                                
 
                                 hash_insert(dictionary, black_state_id, count);
                                 inv_dictionary[count] = black_state_id;
@@ -480,6 +478,19 @@ void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH]
     
 }
 
+void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH],unsigned int condition_array[] ){
 
+    hash_init(dict);
 
+    make_dictionary(dict,inv_dict);
 
+    make_graph(dict,inv_dict,graph_table, inv_graph_table,condition_array);
+
+    printf("Saving...\n");
+
+    save_int_table(graph_table, "graph_table.dat");
+    save_int_table(inv_graph_table, "inv_graph_table.dat");
+    save_int_array(condition_array, "condition_array.dat");
+
+    printf("Saved!\n");
+}
