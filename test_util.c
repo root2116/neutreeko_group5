@@ -94,3 +94,47 @@ int count_data_items(DataItem **table){
     return count;
 }
 
+void compare_table_keys(DataItem **table1, DataItem **table2){
+    for (int i = 0; i < SIZE; i++)
+    {
+
+        if (table1[i] == NULL && table2[i] == NULL)
+            continue;
+        else if (table1[i] != NULL && table2[i] != NULL)
+        {
+            DataItem *cur = table1[i];
+            while (1)
+            {
+            
+                unsigned int *correspondence = hash_search(table2, cur->key);
+
+                //そもそも対応物がない場合
+                if (correspondence == NULL){
+                    printf("table1: %u\n",cur->key);
+                    return;
+                }
+                    
+
+
+                
+                if (cur->next == NULL)
+                {
+                    if (depth_of_data_item_list(table1[i]) == depth_of_data_item_list(table2[i]))
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    cur = cur->next;
+                }
+            }
+        }
+        else
+        { //片方にデータがあり、もう片方にない場合
+            return;
+        }
+    }
+
+    
+}

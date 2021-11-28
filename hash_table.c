@@ -18,15 +18,7 @@ void hash_init(DataItem **table)
     return;
 }
 
-// static void cell_free(DataItem *cell)
-// {
-//     if (cell->key != NULL)
-//         free(cell->key);
-//     if (cell->data != NULL)
-//         free(cell->data);
-//     free(cell);
-//     return;
-// }
+
 
 int get_hash_value(unsigned int key)
 {
@@ -80,46 +72,46 @@ int hash_insert(DataItem **table, unsigned int key, unsigned int *data)
     return 0;
 }
 
-// int hash_delete(DataItem **table, int key)
-// {
-//     DataItem *target = NULL;
-//     DataItem *chain = NULL;
+int hash_delete(DataItem **table, unsigned int key)
+{
+    DataItem *target = NULL;
+    DataItem *chain = NULL;
 
-//     int hashval = get_hash_value(key);
+    int hashval = get_hash_value(key);
 
-//     /* ハッシュキーがハッシュテーブルに存在しているか確認する */
-//     target = table[hashval];
-//     if (target == NULL)
-//     {
-//         fprintf(stderr, "target[%s] is not exist in hash table.\n", key);
-//         return (-1);
-//     }
-//     chain = target->next;
+    /* ハッシュキーがハッシュテーブルに存在しているか確認する */
+    target = table[hashval];
+    if (target == NULL)
+    {
+        fprintf(stderr, "target[%u] is not exist in hash table.\n", key);
+        return (-1);
+    }
+    chain = target->next;
 
-//     /* リストの先頭要素を削除する場合 */
-//     if (target->key == key)
-//     {
-//         table[hashval] = chain;
-//         cell_free(target);
-//         return (0);
-//     }
+    /* リストの先頭要素を削除する場合 */
+    if (target->key == key)
+    {
+        table[hashval] = chain;
+        free(target);
+        return (0);
+    }
 
-//     /* 先頭以外の要素を削除する場合 */
-//     while (target != NULL)
-//     {
-//         if (target->key == key)
-//         {
-//             chain->next = target->next;
-//             cell_free(target);
-//             return (0);
-//         }
+    /* 先頭以外の要素を削除する場合 */
+    while (target != NULL)
+    {
+        if (target->key == key)
+        {
+            chain->next = target->next;
+            free(target);
+            return (0);
+        }
 
-//         chain = target;
-//         target = target->next;
-//     }
+        chain = target;
+        target = target->next;
+    }
 
-//     return (-1);
-// }
+    return (-1);
+}
 
 void hash_append_data(DataItem **table, unsigned int key, unsigned int new_id){
     unsigned int *data = hash_search(table,key);

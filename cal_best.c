@@ -1,4 +1,4 @@
-
+#include "cal_best.h"
 #include "make_graph.h"
 #include "hash_table.h"
 #include "main.h"
@@ -6,11 +6,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+unsigned int checked_id_table[SIZE];
+unsigned int to_check_id_table[SIZE];
 
-DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table){
+void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table, DataItem **best_table){
     DataItem *next_condition_table = malloc(sizeof(DataItem)*SIZE);
-    DataItem *max_transition_end_table = malloc(sizeof(DataItem)*SIZE);
-    DataItem *best_table = malloc(sizeof(DataItem)*SIZE);
+    DataItem *max_edges_to_end_table = malloc(sizeof(DataItem)*SIZE);
+    
 
     void hash_init(next_condition_table);
     void hash_init(max_transition_end_table);
@@ -21,6 +23,7 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
     int board[5][5] = {};
     int now_id = 0;
     int turn;
+    unsigned int empty_data[DATA_LENGTH] = {};
 
     for(w1 = 0; w1 < 25; w1++){
         for(w2 = w1 + 1; w2 < 25; w2++){
@@ -35,9 +38,10 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                             
                                 generate_board_from_array(board,board_num_array);
                                 now_id = encode_board(board, turn);
-                                hash_insert(&next_condition_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
-                                hash_insert(&max_transition_end_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
-                                hash_insert(&best_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
+                                
+                                hash_insert((DataItem**)next_condition_table, now_id, empty_data);
+                                hash_insert((DataItem**)max_edges_to_end_table, now_id,empty_data);
+                                hash_insert(best_table, now_id,empty_data);
                             }
                         }
                     }
@@ -48,8 +52,7 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
 
 
 
-    int checked_id_table[SIZE];
-    int to_check_id_table[SIZE];
+    
 
 
     int i = 0;
@@ -78,18 +81,18 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                 }
                 
                 if (hash_search(condition_table,now_id)[0] == 0){
-                    hash_search(&next_condition_table,now_id)[hash_search(condition_table,now_id)[0]] += 1;
-                    if (hash_search(&next_condition_table,now_id)[0] > 0){
+                    hash_search((DataItem**)next_condition_table,now_id)[hash_search(condition_table,now_id)[0]] += 1;
+                    if (hash_search((DataItem**)next_condition_table,now_id)[0] > 0){
                         hash_search(condition_table,now_id)[0] = 1;
                         to_check_id_table[c] = now_id;
                         c += 1;
-                        hash_search(&max_transition_end_table,now_id)[0] = layer;
+                        hash_search((DataItem **)max_edges_to_end_table, now_id)[0] = layer;
                     }
-                    else if (hash_search(&next_condition_table,now_id)[2] == hash_search(edge_num_table,now_id)[0]  /*　==要素数*/){
+                    else if (hash_search((DataItem**)next_condition_table,now_id)[2] == hash_search(edge_num_table,now_id)[0]  /*　==要素数*/){
                         hash_search(condition_table,now_id)[0] = -1;
                         to_check_id_table[c] = now_id;
                         c += 1;
-                        hash_search(&max_transition_end_table,now_id)[0] = -layer;
+                        hash_search((DataItem **)max_edges_to_end_table, now_id)[0] = -layer;
                     }
                     
                 }
@@ -127,13 +130,13 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                                             break;
                                         }
                                         if (hash_search(condition_table,next_id)[0] == -1){
-                                            if (hash_search(&max_transition_end_table,next_id)[0] > tmp_max_transition_end){
-                                                tmp_max_transition_end = hash_search(&max_transition_end_table,next_id)[0];
+                                            if (hash_search((DataItem**)max_edges_to_end_table,next_id)[0] > tmp_max_transition_end){
+                                                tmp_max_transition_end = hash_search((DataItem **)max_edges_to_end_table, next_id)[0];
                                                 best_id = next_id;
                                             }
                                         }   
                                     }
-                                    hash_search(&best_table,now_id)[0] = best_id;
+                                    hash_search(best_table,now_id)[0] = best_id;
                                 }
                                 /*負け盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
                                 else if (hash_search(condition_table,now_id)[0] == -1){
@@ -146,15 +149,15 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                                             break;
                                         }
                                         if (hash_search(condition_table,next_id)[0] == 1){
-                                            if (hash_search(&max_transition_end_table,next_id)[0] > tmp_max_transition_end){
-                                                tmp_max_transition_end = hash_search(&max_transition_end_table,next_id)[0];
+                                            if (hash_search((DataItem**)max_edges_to_end_table,next_id)[0] > tmp_max_transition_end){
+                                                tmp_max_transition_end = hash_search((DataItem**)max_edges_to_end_table,next_id)[0];
                                                 best_id = next_id;
                                             }
                                         }else{
                                         printf("err");
                                         }
                                     }
-                                    hash_search(&best_table,now_id)[0] = best_id;
+                                    hash_search(best_table,now_id)[0] = best_id;
                                 }
                                 else{
                                     best_id = 0;
@@ -166,11 +169,11 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
                                             break;
                                         }
                                         if (hash_search(condition_table,next_id)[0] == 0){
-                                            tmp_max_transition_end = hash_search(&max_transition_end_table,next_id)[0];
+                                            tmp_max_transition_end = hash_search((DataItem**)max_edges_to_end_table,next_id)[0];
                                             best_id = next_id;
                                         }
                                     }
-                                    hash_search(&best_table,now_id)[0] = best_id;
+                                    hash_search(best_table,now_id)[0] = best_id;
                                 }
                             }
                         }
@@ -180,6 +183,6 @@ DataItem* calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataI
         }
     }
     free(next_condition_table);
-    free(max_transition_end_table);
-    return best_table;
+    free(max_edges_to_end_table);
+   
 }
