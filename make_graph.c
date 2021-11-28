@@ -346,7 +346,7 @@ void recursive_delete(DataItem **seen, DataItem *data_item, DataItem **graph_tab
     recursive_delete(seen, data_item->next, graph_table, condition_table);
 }
 
-void save_table(DataItem **table,char* file_path){
+void save_hash_table(DataItem **table,char* file_path){
     FILE *fpw = fopen(file_path,"wb");
 
     for(int i = 0; i < SIZE; i++){
@@ -369,7 +369,23 @@ void recursive_save(DataItem *data_item, FILE *fpw){
     }
 }   
 
-void reconstruct_table_from_file(DataItem **table, char* file_path){
+void save_int_table(unsigned int table[][DATA_LENGTH], char* file_path){
+    FILE *fpw = fopen(file_path, "wb");
+
+    fwrite(table,sizeof(int),SIZE*DATA_LENGTH,fpw);
+    
+    fclose(fpw);
+}
+
+void save_int_array(unsigned int array[], char* file_path){
+    FILE *fpw = fopen(file_path, "wb");
+
+    fwrite(array,sizeof(int),SIZE, fpw);
+    
+    fclose(fpw);
+}
+
+void reconstruct_hash_table_from_file(DataItem **table, char* file_path){
     FILE *fpr = fopen(file_path,"rb");
 
     DataItem *data_item = calloc(SIZE,sizeof(DataItem));
@@ -387,6 +403,22 @@ void reconstruct_table_from_file(DataItem **table, char* file_path){
 
     fclose(fpr);
 
+}
+
+void reconstruct_int_table_from_file(unsigned int table[][DATA_LENGTH], char* file_path){
+    FILE *fpr = fopen(file_path, "rb");
+
+    fread(&table,sizeof(int),SIZE*DATA_LENGTH,fpr);
+
+    fclose(fpr);
+}
+
+void reconstruct_int_array_from_file(unsigned int array[], char* file_path){
+    FILE *fpr = fopen(file_path, "rb");
+
+    fread(&array, sizeof(int), SIZE, fpr);
+
+    fclose(fpr);
 }
 
 void edge_num_count(DataItem **graph_table,DataItem **edge_num_table) {

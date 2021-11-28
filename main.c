@@ -261,12 +261,13 @@ void display_board(int board[5][5]) {
   printf("\n");
 }
 
-DataItem *graph_table[SIZE];
-DataItem *inv_graph_table[SIZE];
-DataItem *condition_table[SIZE];
-DataItem *edge_num_table[SIZE];
-DataItem *best_table[SIZE];
 
+
+unsigned int graph_table[SIZE][DATA_LENGTH];
+unsigned int inv_graph_table[SIZE][DATA_LENGTH];
+unsigned int condition_array[SIZE];
+unsigned int edge_num_array[SIZE];
+unsigned int best_array[SIZE];
 
 
 int main(int argc,char *argv[]){
@@ -282,66 +283,17 @@ int main(int argc,char *argv[]){
 
     printf("int: %lu bytes\n",sizeof(int));
     
-    hash_init(graph_table);
-    hash_init(inv_graph_table);
-    hash_init(condition_table);
-    hash_init(edge_num_table);
-    hash_init(best_table);
-
-    int moves[DATA_LENGTH] = {};
-    for(int i = 0; i < DATA_LENGTH; i++){
-        moves[i] = -1;
-    }
+    
 
     
 
 
-    //generate_board_from_array
-    int w1,w2,w3,b1,b2,b3;
-    int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
-    w1 = 1; w2 = 3; w3 = 17; b1 = 7; b2 = 21; b3 = 23;
     
-    int test_board[5][5] = {};
-    generate_board_from_array(test_board,board_num_array);
-    assert(is_same_board(board,test_board));
-
-    //encode_board
-    unsigned int encoded = encode_board(board,WHITE);
-    printf("%u\n", encoded);
-    assert(encoded == 2826969780);
-
-    //decode_board_id
-    int decoded[5][5] = {};
-    decode_state_id(encoded, decoded);
-    display_board(decoded);
-    assert(is_same_board(board,decoded));
-
-
-    //relative_move 
-    Point cur = {1,4};
-    Vector move_vec = {0,-1};
-    assert(relative_move(board, cur, move_vec, BLACK) == 2843746482);
-
-    //next_board_ids
-    
-    unsigned int *next_state_ids_for_black = generate_next_state_ids(1937768462);
-
-    unsigned int expectations[] = {
-        4076896270,
-        4076863758,
-        4211081227,
-        4078960654,
-        4076865550};
-
-    for(int i = 0; i < 5; i++){
-        printf("%u\n",next_state_ids_for_black[i]);
-        assert(next_state_ids_for_black[i] == expectations[i]);
-    }
 
 
     // make_graph
 
-    // make_graph(graph_table, inv_graph_table,condition_table);
+    make_graph(graph_table, inv_graph_table,condition_array);
 
     
     
@@ -362,13 +314,14 @@ int main(int argc,char *argv[]){
 
     // compare_table_keys(graph_table, inv_graph_table);
 
-    // printf("Saving...\n");
+    printf("Saving...\n");
 
-    // save_table(graph_table, "graph_table.dat");
-    // save_table(condition_table, "condition_table.dat");
-    // save_table(inv_graph_table, "inv_graph_table.dat");
+    save_int_table(graph_table, "graph_table.dat");
+    save_int_table(inv_graph_table, "inv_graph_table.dat");
+    save_int_array(condition_array, "condition_array.dat");
+    
 
-    // printf("Saved!\n");
+    printf("Saved!\n");
 
     // //is_same_table
     // assert(is_same_table(graph_table,graph_table));
@@ -376,20 +329,20 @@ int main(int argc,char *argv[]){
     // //reconstruct_graph_from_file
     // assert(is_same_table(graph_table,revived_graph_table));
 
-    reconstruct_table_from_file(graph_table,"graph_table.dat");
-    reconstruct_table_from_file(inv_graph_table,"inv_graph_table.dat");
-    reconstruct_table_from_file(condition_table,"condition_table.dat");
+    reconstruct_int_table_from_file(graph_table,"graph_table.dat");
+    reconstruct_int_table_from_file(inv_graph_table,"inv_graph_table.dat");
+    reconstruct_int_array_from_file(condition_array,"condition_array.dat");
 
 
 
     //edge_num_table
     
-    edge_num_count(inv_graph_table,edge_num_table);
+    edge_num_count(inv_graph_table,edge_num_array);
     printf("edge_num_count finished\n");
 
 
     //cal_best
-    calculate_best(graph_table,inv_graph_table,condition_table,edge_num_table,best_table);
+    calculate_best(graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
     printf("calculate_best finished\n");
 
     //-----------------------------------------------------------------------
