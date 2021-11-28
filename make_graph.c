@@ -237,7 +237,7 @@ void make_dictionary(DataItem **dictionary){
 
 
 
-void make_graph(DataItem **dictionary, int graph_table[SIZE][DATA_LENGTH] ,int condition_array[]){
+void make_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGTH] ,unsigned int condition_array[]){
 
     int w1,w2,w3,b1,b2,b3;
     int *board_num_array[6] = {&w1,&w2,&w3,&b1,&b2,&b3};
