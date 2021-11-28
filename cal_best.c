@@ -102,7 +102,7 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
             tmp_max_transition_to_end = SIZE;
             //遷移先の状態を確認
             for (j = 0; j < DATA_LENGTH; j += 1){
-                next_id = graph_table[j];//next_id:遷移先
+                next_id = graph_table[now_index][j];//next_id:遷移先
                 if (next_id == 0){
                     break;
                 }
@@ -122,7 +122,7 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
             tmp_max_transition_to_end = SIZE;
 
             for (j = 0; j < DATA_LENGTH; j += 1){
-                next_id = graph_table[j];
+                next_id = graph_table[now_index][j];
                 if (next_id == 0){
                     break;
                 }
@@ -143,7 +143,7 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
             tmp_max_transition_to_end = SIZE;
 
             for (j = 0; j < DATA_LENGTH; j += 1){
-                next_id = graph_table[j];
+                next_id = graph_table[now_index][j];
                 if (next_id == 0){
                     break;
                 }
