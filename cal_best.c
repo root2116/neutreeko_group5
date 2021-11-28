@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+unsigned int checked_id_table[SIZE];
+unsigned int to_check_id_table[SIZE];
 
 void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem **condition_table, DataItem **edge_num_table, DataItem **best_table){
     DataItem *next_condition_table = malloc(sizeof(DataItem)*SIZE);
@@ -17,6 +19,7 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
     int board[5][5] = {};
     int now_id = 0;
     int turn;
+    unsigned int empty_data[DATA_LENGTH] = {};
 
     for(w1 = 0; w1 < 25; w1++){
         for(w2 = w1 + 1; w2 < 25; w2++){
@@ -31,9 +34,10 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
                             
                                 generate_board_from_array(board,board_num_array);
                                 now_id = encode_board(board, turn);
-                                hash_insert((DataItem**)next_condition_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
-                                hash_insert((DataItem**)max_edges_to_end_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
-                                hash_insert(best_table, now_id, malloc(sizeof(int)*DATA_LENGTH));
+                                
+                                hash_insert((DataItem**)next_condition_table, now_id, empty_data);
+                                hash_insert((DataItem**)max_edges_to_end_table, now_id,empty_data);
+                                hash_insert(best_table, now_id,empty_data);
                             }
                         }
                     }
@@ -44,8 +48,7 @@ void calculate_best(DataItem **graph_table,DataItem **inv_graph_table,DataItem *
 
 
 
-    int checked_id_table[SIZE];
-    int to_check_id_table[SIZE];
+    
 
 
     int i = 0;
