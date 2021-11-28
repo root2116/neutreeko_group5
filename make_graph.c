@@ -477,33 +477,18 @@ void reconstruct_int_array_from_file(unsigned int array[], char* file_path){
     fclose(fpr);
 }
 
-void edge_num_count(DataItem **graph_table,DataItem **edge_num_table) {
-  
-  
-  for (int i = 0; i < SIZE; i++) {
-    if (graph_table[i] != NULL) {
-      recursive_count(edge_num_table, graph_table[i]);
+void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH], unsigned int edge_num_array[])
+{
+
+    for(int i = 0; i < SIZE; i++){
+        for(int j = 0; j < SIZE; j++){
+            if(inv_graph_table[i][j] == 0) break;
+
+            edge_num_array[i] += 1;
+        }
     }
-  }
-
+    
 }
-
-void recursive_count(DataItem **edge_num_table, DataItem *data_item) {
-  if (data_item == NULL) {
-    return;
-  }
-  unsigned int next_nodes_num = 0;
-  unsigned int next_nodes_num_data[DATA_LENGTH] = {}; 
-  unsigned int *data = data_item->data;
-  while (*data != 0) {
-    next_nodes_num++;
-    data++;
-  }
-  next_nodes_num_data[0] = next_nodes_num;
-  hash_insert(edge_num_table, data_item->key, next_nodes_num_data);
-  recursive_count(edge_num_table, data_item->next);
-}
-
 
 
 

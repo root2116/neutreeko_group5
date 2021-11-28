@@ -268,7 +268,7 @@ unsigned int inv_graph_table[SIZE][DATA_LENGTH];
 unsigned int condition_array[SIZE];
 unsigned int edge_num_array[SIZE];
 unsigned int best_array[SIZE];
-
+DataItem *dict[SIZE];
 
 int main(int argc,char *argv[]){
 
@@ -293,7 +293,7 @@ int main(int argc,char *argv[]){
 
     // make_graph
 
-    make_graph(graph_table, inv_graph_table,condition_array);
+    make_graph(dict,graph_table, inv_graph_table,condition_array);
 
     
     
@@ -337,7 +337,7 @@ int main(int argc,char *argv[]){
 
     //edge_num_table
     
-    edge_num_count(inv_graph_table,edge_num_array);
+    edge_num_count(dict, inv_graph_table,edge_num_array);
     printf("edge_num_count finished\n");
 
 
