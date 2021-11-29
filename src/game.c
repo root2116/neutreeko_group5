@@ -349,7 +349,7 @@ void start_game(int init_turn){
 
 char* game_ai(DataItem **dict,short int best_move_array[], int board[][5], int turn){
 
-    char *best_move = (char*)malloc(sizeof(char)*4);
+    char *best_move = (char*)malloc(sizeof(char)*5);
 
     int state_id = encode_board(board,turn);
 

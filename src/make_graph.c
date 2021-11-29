@@ -401,16 +401,17 @@ void reconstruct_int_array_from_file(unsigned int array[], char* file_path){
 }
 
 void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH], unsigned int edge_num_array[])
-{
+{   
+    printf("Counting edges...\n");
 
     for(int i = 0; i < SIZE; i++){
-        for(int j = 0; j < SIZE; j++){
+        for(int j = 0; j < DATA_LENGTH; j++){
             if(inv_graph_table[i][j] == 0) break;
 
             edge_num_array[i] += 1;
         }
     }
-    
+    printf("Done!\n");
 }
 
 
