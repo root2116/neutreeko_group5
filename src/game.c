@@ -1,8 +1,10 @@
 
 
 #include "game.h"
+#include "make_graph.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int gcd(int x, int y)
 {
@@ -344,3 +346,39 @@ void start_game(int init_turn){
         }
     }
 }
+
+char* game_ai(DataItem **dict,short int best_move_array[], int board[][5], int turn){
+
+    char *best_move = (char*)malloc(sizeof(char)*4);
+
+    int state_id = encode_board(board,turn);
+
+    int state_index = hash_search(dict,state_id);
+
+    short int best_move_int = best_move_array[state_index];
+
+    short int tmp = best_move_int;
+
+
+    
+    convert_move_int_into_move_string(best_move_int,best_move);
+
+    return best_move;
+
+
+}
+
+void convert_move_int_into_move_string(short int move_int, char move[4]){
+    short int tmp = move_int;
+
+    move[3] = 'A' + tmp % 10;
+    tmp /= 10;
+    move[2] = '0' + tmp % 10;
+    tmp /= 10;
+    move[1] = 'A' + tmp % 10;
+    tmp /= 10;
+    move[0] = '0' + tmp % 10;
+
+
+
+}   

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_GAME
 #define INCLUDED_GAME
 //------------------------------------------------
-
+#include "hash_table.h"
 //------------------------------------------------
 //  マクロ定義(Macro definition)
 //------------------------------------------------
@@ -59,5 +59,9 @@ void update_turn(int *turn, int *turn_count);
 void display_board(int board[5][5]);
 
 void start_game(int turn);
+
+char *game_ai(DataItem **dict, short int best_move_array[], int board[][5], int turn);
+
+void convert_move_int_into_move_string(short int move_int, char move[4]);
 //------------------------------------------------
 #endif
