@@ -478,7 +478,13 @@ void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH]
     
 }
 
+
 void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH],unsigned int condition_array[] ){
+
+    for (int i = 0; i < SIZE; i++)
+    {
+        condition_array[i] = 1;
+    }
 
     hash_init(dict);
 
@@ -487,10 +493,20 @@ void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int
     make_graph(dict,inv_dict,graph_table, inv_graph_table,condition_array);
 
     printf("Saving...\n");
-
+    
+    save_hash_table(dict,"dict.dat");
+    save_int_array(int_dict,"int_dict.dat");
     save_int_table(graph_table, "graph_table.dat");
     save_int_table(inv_graph_table, "inv_graph_table.dat");
     save_int_array(condition_array, "condition_array.dat");
 
     printf("Saved!\n");
+}
+
+void reconsturct_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]){
+    reconstruct_hash_table_from_file(dict,"dict.dat");
+    reconstruct_int_array_from_file(inv_dict,"inv_dict.dat");
+    reconstruct_int_table_from_file(graph_table,"graph_table.dat");
+    reconstruct_int_table_from_file(inv_graph_table,"inv_graph_table.dat");
+    reconstruct_int_array_from_file(condition_array,"condition_array.dat");
 }

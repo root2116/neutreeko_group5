@@ -282,66 +282,20 @@ int main(int argc,char *argv[]){
 
     //テスト----------------------------------------------------------------
 
-    printf("int: %lu bytes\n",sizeof(int));
-    
     
 
-    for(int i = 0; i < SIZE; i++){
-        condition_array[i] = 1;
-    }
-
+    generate_and_save_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
 
     
-
-    
-    // make_graph
-
-    
-
-    // 
-    
-    // printf("the number of data_items in graph_table : %d\n",count_data_items(graph_table));
-
-    
-
-    // printf("the number of data_items in graph_table : %d\n", count_data_items(graph_table));
-
-    // remove_unreachable_states(graph_table,condition_table);
-
-
-    // printf("the number of data_items in graph_table : %d\n", count_data_items(graph_table));
-
-    // printf("the number of data_items in inv_graph_table : %d\n", count_data_items(inv_graph_table));
-
-    // printf("the number of data items in condition_tabl : %d\n",count_data_items(condition_table));
-
-    // compare_table_keys(graph_table, inv_graph_table);
-
-    
-
-    // //is_same_table
-    // assert(is_same_table(graph_table,graph_table));
-  
-    // //reconstruct_graph_from_file
-    // assert(is_same_table(graph_table,revived_graph_table));
-
-    // 
-    reconstruct_hash_table_from_file(dict,"dict.dat");
-    reconstruct_int_table_from_file(graph_table,"graph_table.dat");
-    reconstruct_int_table_from_file(inv_graph_table,"inv_graph_table.dat");
-    reconstruct_int_array_from_file(condition_array,"condition_array.dat");
-
-
-
     //edge_num_table
     
-    edge_num_count(dict, inv_graph_table,edge_num_array);
-    printf("edge_num_count finished\n");
+    // edge_num_count(dict, inv_graph_table,edge_num_array);
+    // printf("edge_num_count finished\n");
 
 
     //cal_best
-    calculate_best(dict,inv_dict,graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
-    printf("calculate_best finished\n");
+    // calculate_best(dict,inv_dict,graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
+    // printf("calculate_best finished\n");
 
     //-----------------------------------------------------------------------
 
