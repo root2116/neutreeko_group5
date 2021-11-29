@@ -6,20 +6,26 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-int checked_index_table[SIZE];
-int to_check_index_table[SIZE];
+int checked_index_table[SIZE] = {};
+int to_check_index_table[SIZE] = {};
 unsigned int next_condition_table[SIZE][3];
-unsigned int max_edges_to_end_table[SIZE];
+unsigned int max_edges_to_end_table[SIZE] = {};
 
 void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsigned int graph_table[SIZE][DATA_LENGTH],
                     unsigned int inv_graph_table[SIZE][DATA_LENGTH], unsigned int condition_array[SIZE], 
                     unsigned int edge_num_array[SIZE], unsigned int best_table[SIZE]){
-
-    //to_check_index_table(初期状態)　の作成（勝敗が確定しているものをぶち込む）
     int i = 0;
     int j = 0;
     int c = 0;
 
+    for (i = 0; i < SIZE; i += 1){
+        for (j = 0 ; j < 2; j += 1){
+            next_condition_table[i][j] = 0;
+        }
+    }
+    
+
+    //to_check_index_table(初期状態)　の作成（勝敗が確定しているものをぶち込む）
     for (i = 0; i < SIZE; i += 1){//-1で初期化
         to_check_index_table[i] = -1;
         checked_index_table[i] = -1;
