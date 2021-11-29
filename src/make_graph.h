@@ -61,5 +61,7 @@ void load_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table
 
 void reset(unsigned int graph_table[SIZE][DATA_LENGTH]);
 
+void show_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGTH], int c);
+
 //------------------------------------------------
 #endif

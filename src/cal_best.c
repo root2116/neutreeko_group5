@@ -5,14 +5,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-int checked_index_table[SIZE] = {};
-int to_check_index_table[SIZE] = {};
+
 unsigned int next_condition_table[SIZE][3];
-unsigned int max_edges_to_end_table[SIZE] = {};
+
 
 void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsigned int graph_table[SIZE][DATA_LENGTH],
                     unsigned int inv_graph_table[SIZE][DATA_LENGTH], unsigned int condition_array[SIZE], 
                     unsigned int edge_num_array[SIZE], unsigned int best_table[SIZE]){
+
+    int *checked_index_table = calloc(SIZE,sizeof(int));
+    int *to_check_index_table = calloc(SIZE,sizeof(int));
+    unsigned int *max_edges_to_end_table = calloc(SIZE,sizeof(int));
+
+    
+
     int i = 0;
     int j = 0;
     int c = 0;
@@ -42,8 +48,8 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
     unsigned int now_id = 0;
     int next_index = 0;
     unsigned int next_id = 0;
-    int to_check_id = 0;
-    unsigned to_check_index = 0;
+    unsigned int to_check_id = 0;
+    int to_check_index = 0;
     int layer = 1;
 
     int count = 0;
@@ -76,8 +82,8 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
                 to_check_index = hash_search(dictionary,to_check_id);//checked_index_tableの中身に遷移出来る状態
                 if (condition_array[to_check_index] == 1){//その状態の勝敗が未確定（引き分け）だったならこれから勝敗が決まるかをチェック
                     //next_condition_array[to_check_index][0]:to_check_indexから遷移できる状態のうち相手から見て負けの状態の数
-                    //next_condition_array[to_check_index][0]:to_check_indexから遷移できる状態のうち相手から見て引き分けの状態の数
-                    //next_condition_array[to_check_index][0]:to_check_indexから遷移できる状態のうち相手から見て勝ちの状態の数
+                    //next_condition_array[to_check_index][1]:to_check_indexから遷移できる状態のうち相手から見て引き分けの状態の数
+                    //next_condition_array[to_check_index][2]:to_check_indexから遷移できる状態のうち相手から見て勝ちの状態の数
                     next_condition_table[to_check_index][condition_array[now_index]] += 1;
                     if (next_condition_table[to_check_index][0] > 0){//遷移先に相手の負け状態が1つでもあれば勝ち
                         condition_array[to_check_index] = WIN;
@@ -145,7 +151,7 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
                         best_id = next_id;
                     }
                 } else{//負け盤面なら遷移先全てが相手の勝ち盤面のはず
-                    printf("err");
+                    // printf("err");
                 }  
             }
             best_table[now_index] = best_id;

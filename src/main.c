@@ -29,15 +29,19 @@ int main(int argc,char *argv[]){
     // generate_and_save_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
     load_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
     
+    // show_graph(dict,inv_graph_table,50);
     //edge_num_table
     
-    // edge_num_count(dict, inv_graph_table,edge_num_array);
-    // printf("edge_num_count finished\n");
+    edge_num_count(dict, inv_graph_table,edge_num_array);
+
+    // printf("%d\n",edge_num_array[0]);
+
+    printf("edge_num_count finished\n");
 
 
-    //cal_best
-    // calculate_best(dict,inv_dict,graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
-    // printf("calculate_best finished\n");
+    // cal_best
+    calculate_best(dict,inv_dict,graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
+    printf("calculate_best finished\n");
 
     //-----------------------------------------------------------------------
 

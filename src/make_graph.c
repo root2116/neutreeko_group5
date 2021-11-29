@@ -444,7 +444,8 @@ void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int
 void load_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]){
 
     printf("Loading set...\n");
-
+    
+    hash_init(dict);
     load_hash_table_from_file(dict,DICT_PATH);
     load_int_array_from_file(inv_dict,INV_DICT_PATH);
     load_int_table_from_file(graph_table,GRAPH_TABLE_PATH);
