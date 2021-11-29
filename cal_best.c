@@ -120,14 +120,14 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
                     break;
                 }
                 next_index = hash_search(dictionary,next_id);
-                if (condition_array[next_id] == 0){//遷移先が相手視点で負けなら・・・
-                    if (max_edges_to_end_table[next_id] < tmp_max_transition_to_end){
-                        tmp_max_transition_to_end = max_edges_to_end_table[next_id];
+                if (condition_array[next_index] == 0){//遷移先が相手視点で負けなら・・・
+                    if (max_edges_to_end_table[next_index] < tmp_max_transition_to_end){
+                        tmp_max_transition_to_end = max_edges_to_end_table[next_index];
                         best_id = next_id;
                     }
                 }   
             }
-            best_table[now_id] = best_id;
+            best_table[now_index] = best_id;
         }
         /*負け盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
         else if (condition_array[now_index] == 0){
@@ -140,16 +140,16 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
                     break;
                 }
                 next_index = hash_search(dictionary,next_id);
-                if (condition_array[next_id] == 2){
-                    if (max_edges_to_end_table[next_id] < tmp_max_transition_to_end){
-                        tmp_max_transition_to_end = max_edges_to_end_table[next_id];
+                if (condition_array[next_index] == 2){
+                    if (max_edges_to_end_table[next_index] < tmp_max_transition_to_end){
+                        tmp_max_transition_to_end = max_edges_to_end_table[next_index];
                         best_id = next_id;
                     }
                 } else{//負け盤面なら遷移先全てが相手の勝ち盤面のはず
                     printf("err");
                 }  
             }
-            best_table[now_id] = best_id;
+            best_table[now_index] = best_id;
         }
         else{
             best_id = 0;
@@ -161,13 +161,13 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
                     break;
                 }
                 next_index = hash_search(dictionary,next_id);
-                if (condition_array[next_id] == 1){//引き分け盤面なら適当に遷移
-                    tmp_max_transition_to_end = max_edges_to_end_table[next_id];
+                if (condition_array[next_index] == 1){//引き分け盤面なら適当に遷移
+                    tmp_max_transition_to_end = max_edges_to_end_table[next_index];
                     best_id = next_id;  
                     break;
                 }  
             }
-            best_table[now_id] = best_id;
+            best_table[now_index] = best_id;
         }
     }
 }
