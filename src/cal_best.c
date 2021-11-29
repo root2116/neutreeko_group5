@@ -18,7 +18,7 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
     int c = 0;
 
     for (i = 0; i < SIZE; i += 1){
-        for (j = 0 ; j < 2; j += 1){
+        for (j = 0 ; j < DATA_LENGTH; j += 1){
             next_condition_table[i][j] = 0;
         }
     }
