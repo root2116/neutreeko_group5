@@ -308,14 +308,17 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
         }    
     }
     int *end_index = (int*)malloc(sizeof(int)*SIZE);
-    unsigned int from_key;
+    unsigned int from_id;
     int to_index;
     for (int i = 0; i < SIZE; i += 1){
         for (int j = 0; j < DATA_LENGTH; j += 1){//i(index)からgraph[i][j](key)に遷移する
         //inv_graphにgraph[i][j](index)からi(key)への辺を張る
-            from_key = inv_dictionary[i];
+            if (graph_table[i][j] == END){
+                break;
+            }
+            from_id = inv_dictionary[i];
             to_index = hash_search(dictionary ,graph_table[i][j]);
-            inv_graph_table[to_index][end_index[to_index]] = from_key;
+            inv_graph_table[to_index][end_index[to_index]] = from_id;
             end_index[to_index] += 1;
         }
     }
@@ -323,7 +326,6 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
     free(end_index);
     printf("\nDone!\n");    
 }
-
 
 void save_hash_table(DataItem **table,char* file_path){
     FILE *fpw = fopen(file_path,"wb");
