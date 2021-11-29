@@ -1,5 +1,4 @@
 #include "hash_table.h"
-#include "make_graph.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

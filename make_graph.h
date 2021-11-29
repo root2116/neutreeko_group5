@@ -2,7 +2,7 @@
 #define INCLUDED_MAKE_GRAPH
 //------------------------------------------------
 #include "hash_table.h"
-#include "main.h"
+#include "game.h"
 #include <stdio.h>
 //------------------------------------------------
 //  マクロ定義(Macro definition)
@@ -12,12 +12,11 @@
 #define BLACK_INIT_STATE_ID 679486132
 #define WHITE_INIT_STATE_ID 2826969780
 
+
 //------------------------------------------------
 //  型定義(Type definition)
 //------------------------------------------------
-#define WIN 2
-#define LOSE 0
-#define DRAW 1
+
 //------------------------------------------------
 //  プロトタイプ宣言(Prototype declaration)
 //------------------------------------------------
@@ -58,6 +57,8 @@ void reconstruct_int_array_from_file(unsigned int array[], char* file_path);
 void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH], unsigned int edge_num_array[]);
 
 void generate_and_save_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
+
+void reconsturct_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
 
 //------------------------------------------------
 #endif

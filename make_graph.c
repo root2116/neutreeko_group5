@@ -1,8 +1,7 @@
 
 #include "make_graph.h"
 #include "hash_table.h"
-#include "main.h"
-#include "queue.h"
+#include "game.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -248,7 +247,6 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
     int board[5][5] = {};
     int black_state_index = 0;
     int white_state_index = 0;
-    int i;
     int loop_count = 0;
     
 
@@ -286,7 +284,7 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
                                     unsigned int *next_state_ids_for_black = generate_next_state_ids(black_state_id);
                                     unsigned int *next_state_ids_for_white = generate_next_state_ids(white_state_id);
                                     
-                                    for (i = 0; i < DATA_LENGTH; i += 1){
+                                    for (int i = 0; i < DATA_LENGTH; i += 1){
                                         if (next_state_ids_for_black[i] == END){
                                             break;
                                         }
@@ -295,7 +293,7 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
 
                                     
                                     
-                                    for (i = 0; i < DATA_LENGTH; i += 1){
+                                    for (int i = 0; i < DATA_LENGTH; i += 1){
                                         if (next_state_ids_for_white[i] == END){
                                             break;
                                         }
@@ -326,69 +324,6 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
     printf("\nDone!\n");    
 }
 
-
-
-// void remove_unreachable_states(DataItem **graph_table,DataItem **condition_table){
-//     DataItem *seen = calloc(SIZE, sizeof(DataItem));
-
-//     hash_init((DataItem**)seen);
-//     graph_search((DataItem**)seen,BLACK_INIT_STATE_ID,graph_table);
-
-//     graph_search((DataItem**)seen,WHITE_INIT_STATE_ID,graph_table);
-
-//     for(int i = 0; i < SIZE; i++){
-        
-//         recursive_delete((DataItem**)seen,graph_table[i], graph_table,condition_table);
-//     }
-
-//     free(seen);
-// }
-
-
-// void graph_search(DataItem **seen, unsigned int init_state_id, DataItem **graph_table){
-
-//     Queue *queue = malloc(sizeof(Queue));
-//     queue_init(queue);
-
-
-//     unsigned int seen_data[DATA_LENGTH] = {};
-//     seen_data[0] = 1; 
-//     hash_insert(seen, init_state_id,1);
-
-//     enqueue(queue,init_state_id);
-    
-
-//     while(!queue_empty(queue)){
-//         unsigned int state_id = dequeue(queue);
-        
-//             unsigned int *data = hash_search(graph_table, state_id);
-//         for(int i = 0; i < DATA_LENGTH; i++){
-//             if(data[i] == END) break;
-
-//             if(hash_search(seen,data[i]) != NULL) continue;
-
-//             hash_insert(seen,data[i],seen_data);
-//             enqueue(queue,data[i]);
-            
-//         }
-//     }
-
-    
-
-
-// }
-
-// void recursive_delete(DataItem **seen, DataItem *data_item, DataItem **graph_table, DataItem **condition_table){
-//     if(data_item == NULL) return;
-   
-//     if (hash_search(seen, data_item->key) == NULL)
-//     {
-//         hash_delete(graph_table, data_item->key);
-//         hash_delete(condition_table, data_item->key);
-        
-//     }
-//     recursive_delete(seen, data_item->next, graph_table, condition_table);
-// }
 
 void save_hash_table(DataItem **table,char* file_path){
     FILE *fpw = fopen(file_path,"wb");
@@ -504,9 +439,14 @@ void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int
 }
 
 void reconsturct_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]){
+
+    printf("Reconstructing set...\n");
+
     reconstruct_hash_table_from_file(dict,"dict.dat");
     reconstruct_int_array_from_file(inv_dict,"inv_dict.dat");
     reconstruct_int_table_from_file(graph_table,"graph_table.dat");
     reconstruct_int_table_from_file(inv_graph_table,"inv_graph_table.dat");
     reconstruct_int_array_from_file(condition_array,"condition_array.dat");
-}
+
+    printf("Done!\n");
+}   

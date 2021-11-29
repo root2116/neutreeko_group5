@@ -1,49 +1,51 @@
 #include<stdio.h>
 #include "hash_table.h"
 
-// int is_same_board(int array1[5][5], int array2[5][5]){
+int is_same_board(int array1[5][5], int array2[5][5]){
     
-//     for(int i = 0; i < 5; i++){
-//         for(int j = 0; j < 5; j++){
-//             if(array1[i][j] != array2[i][j]){
-//                 return 0;
-//             }
-//         }
-//     }
+    for(int i = 0; i < 5; i++){
+        for(int j = 0; j < 5; j++){
+            if(array1[i][j] != array2[i][j]){
+                return 0;
+            }
+        }
+    }
 
-//     return 1;
-// }
+    return 1;
+}
 
-// int is_same_array(unsigned int *array1, unsigned int *array2, int len)
-// {
-//     for (int i = 0; i < len; i++)
-//     {
-//         if (array1[i] != array2[i])
-//         {
-//             return 0;
-//         }
-//     }
+int is_same_array(unsigned int *array1, unsigned int *array2, int len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        if (array1[i] != array2[i])
+        {
+            return 0;
+        }
+    }
 
-//     return 1;
-// }
+    return 1;
+}
 
-// int depth_of_data_item_list(DataItem *data_item)
-// {
-//     int count = 0;
+int depth_of_data_item_list(DataItem *data_item)
+{
+    int count = 0;
 
-//     DataItem *cur = data_item;
-//     while (1)
-//     {
+    DataItem *cur = data_item;
+    while (1)
+    {
 
-//         if (cur->next == NULL)
-//         {
-//             return count;
-//         }
+        if (cur->next == NULL)
+        {
+            return count;
+        }
 
-//         cur = cur->next;
-//         count++;
-//     }
-// }
+        cur = cur->next;
+        count++;
+    }
+}
+
+
 
 // int is_same_table(DataItem **table1,DataItem **table2){
     

@@ -1,8 +1,5 @@
 #include "cal_best.h"
-#include "make_graph.h"
 #include "hash_table.h"
-#include "main.h"
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,14 +78,14 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
                     //next_condition_array[to_check_index][0]:to_check_indexから遷移できる状態のうち相手から見て勝ちの状態の数
                     next_condition_table[to_check_index][condition_array[now_index]] += 1;
                     if (next_condition_table[to_check_index][0] > 0){//遷移先に相手の負け状態が1つでもあれば勝ち
-                        condition_array[to_check_index] = 2;
+                        condition_array[to_check_index] = WIN;
                         to_check_index_table[c] = to_check_index;//新たに勝敗が確定したのでこの状態にたどり着く状態をこれからチェック
                         c += 1;
                         max_edges_to_end_table[to_check_index] = layer;
                     }
                     else if (next_condition_table[to_check_index][2] == edge_num_array[to_check_index]){
                         //遷移先のすべてが相手の勝ちなら負け
-                        condition_array[to_check_index] = 0;
+                        condition_array[to_check_index] = LOSE;
                         to_check_index_table[c] = to_check_index;
                         c += 1;
                         max_edges_to_end_table[to_check_index] = -layer;
@@ -110,7 +107,7 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
         now_index = hash_search(dictionary,now_id);
 
         /*勝ち盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
-        if (condition_array[now_index] == 2){
+        if (condition_array[now_index] == WIN){
             best_id = 0;
             tmp_max_transition_to_end = SIZE;
             //遷移先の状態を確認
@@ -120,7 +117,7 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
                     break;
                 }
                 next_index = hash_search(dictionary,next_id);
-                if (condition_array[next_index] == 0){//遷移先が相手視点で負けなら・・・
+                if (condition_array[next_index] == LOSE){//遷移先が相手視点で負けなら・・・
                     if (max_edges_to_end_table[next_index] < tmp_max_transition_to_end){
                         tmp_max_transition_to_end = max_edges_to_end_table[next_index];
                         best_id = next_id;
@@ -130,7 +127,7 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
             best_table[now_index] = best_id;
         }
         /*負け盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
-        else if (condition_array[now_index] == 0){
+        else if (condition_array[now_index] == LOSE){
             best_id = 0;
             tmp_max_transition_to_end = SIZE;
 
@@ -140,7 +137,7 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
                     break;
                 }
                 next_index = hash_search(dictionary,next_id);
-                if (condition_array[next_index] == 2){
+                if (condition_array[next_index] == WIN){
                     if (max_edges_to_end_table[next_index] < tmp_max_transition_to_end){
                         tmp_max_transition_to_end = max_edges_to_end_table[next_index];
                         best_id = next_id;

@@ -1,16 +1,13 @@
-#ifndef INCLUDED_MAIN
-#define INCLUDED_MAIN
+#ifndef INCLUDED_GAME
+#define INCLUDED_GAME
 //------------------------------------------------
-
 
 //------------------------------------------------
 //  マクロ定義(Macro definition)
 //------------------------------------------------
-
 #define EMPTY 0
 #define BLACK 1
 #define WHITE 2
-
 
 //------------------------------------------------
 //  型定義(Type definition)
@@ -41,7 +38,7 @@ int gcd(int x, int y);
 
 int ctoi(char c);
 
-void parser(char* input, Move* move);
+void parser(char *input, Move *move);
 
 void make_vec(Point *a, Point *b, Vector *v);
 
@@ -57,8 +54,10 @@ int can_move(int board[5][5], Move move, int turn);
 
 int move_piece(int board[5][5], Move move, int turn);
 
-void update_turn(int* turn, int* turn_count);
+void update_turn(int *turn, int *turn_count);
 
 void display_board(int board[5][5]);
+
+void start_game(int turn);
 //------------------------------------------------
 #endif

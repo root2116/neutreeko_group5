@@ -20,9 +20,11 @@ int is_same_board(int array1[5][5], int array2[5][5]);
 
 int is_same_table(DataItem **table1, DataItem **table2);
 
-int count_data_items(DataItem **table);
+int depth_of_data_item_list(DataItem *data_item);
 
-void compare_table_keys(DataItem **table1, DataItem **table2);
+// int count_data_items(DataItem **table);
+
+// void compare_table_keys(DataItem **table1, DataItem **table2);
 
 //------------------------------------------------
 #endif
