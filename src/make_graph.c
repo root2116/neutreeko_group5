@@ -366,7 +366,7 @@ void save_int_array(unsigned int array[], char* file_path){
     fclose(fpw);
 }
 
-void reconstruct_hash_table_from_file(DataItem **table, char* file_path){
+void load_hash_table_from_file(DataItem **table, char* file_path){
     FILE *fpr = fopen(file_path,"rb");
 
     DataItem *data_item = (DataItem*)calloc(SIZE,sizeof(DataItem));
@@ -386,7 +386,7 @@ void reconstruct_hash_table_from_file(DataItem **table, char* file_path){
 
 }
 
-void reconstruct_int_table_from_file(unsigned int table[][DATA_LENGTH], char* file_path){
+void load_int_table_from_file(unsigned int table[][DATA_LENGTH], char* file_path){
     FILE *fpr = fopen(file_path, "rb");
 
     fread(table,sizeof(int),SIZE*DATA_LENGTH,fpr);
@@ -394,7 +394,7 @@ void reconstruct_int_table_from_file(unsigned int table[][DATA_LENGTH], char* fi
     fclose(fpr);
 }
 
-void reconstruct_int_array_from_file(unsigned int array[], char* file_path){
+void load_int_array_from_file(unsigned int array[], char* file_path){
     FILE *fpr = fopen(file_path, "rb");
 
     fread(array, sizeof(int), SIZE, fpr);
@@ -441,15 +441,15 @@ void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int
     printf("Saved!\n");
 }
 
-void reconsturct_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]){
+void load_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]){
 
     printf("Reconstructing set...\n");
 
-    reconstruct_hash_table_from_file(dict,DICT_PATH);
-    reconstruct_int_array_from_file(inv_dict,INV_DICT_PATH);
-    reconstruct_int_table_from_file(graph_table,GRAPH_TABLE_PATH);
-    reconstruct_int_table_from_file(inv_graph_table,INV_GRAPH_TABLE_PATH);
-    reconstruct_int_array_from_file(condition_array,CONDITION_ARRAY_PATH);
+    load_hash_table_from_file(dict,DICT_PATH);
+    load_int_array_from_file(inv_dict,INV_DICT_PATH);
+    load_int_table_from_file(graph_table,GRAPH_TABLE_PATH);
+    load_int_table_from_file(inv_graph_table,INV_GRAPH_TABLE_PATH);
+    load_int_array_from_file(condition_array,CONDITION_ARRAY_PATH);
 
     printf("Done!\n");
 }   

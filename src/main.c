@@ -17,19 +17,17 @@ unsigned int best_array[SIZE] = {};
 DataItem *dict[SIZE];
 unsigned int inv_dict[SIZE] = {};
 
-reset(graph_table);
-reset(inv_graph_table);
 
 int main(int argc,char *argv[]){
-    
 
-    
+    reset(graph_table);
+    reset(inv_graph_table);
 
     //テスト----------------------------------------------------------------
 
     
 
-    // generate_and_save_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
+    generate_and_save_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
     // reconsturct_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
     
     //edge_num_table

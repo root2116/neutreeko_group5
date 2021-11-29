@@ -39,12 +39,6 @@ void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]);
 
 void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
 
-void remove_unreachable_states(DataItem **graph_table, DataItem **condition_table);
-
-void graph_search(DataItem **seen, unsigned int init_state_id, DataItem **graph_table);
-
-void recursive_delete(DataItem **seen, DataItem *data_item, DataItem **graph_table, DataItem **condition_table);
-
 void save_hash_table(DataItem **table,char* file_path);
 
 void recursive_save(DataItem *data_item, FILE *fpw);
@@ -53,17 +47,17 @@ void save_int_table(unsigned int table[][DATA_LENGTH], char *file_path);
 
 void save_int_array(unsigned int array[], char* file_path);
 
-void reconstruct_hash_table_from_file(DataItem **table, char *file_path);
+void load_hash_table_from_file(DataItem **table, char *file_path);
 
-void reconstruct_int_table_from_file(unsigned int table[][DATA_LENGTH], char* file_path);
+void load_int_table_from_file(unsigned int table[][DATA_LENGTH], char* file_path);
 
-void reconstruct_int_array_from_file(unsigned int array[], char* file_path);
+void load_int_array_from_file(unsigned int array[], char* file_path);
 
 void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH], unsigned int edge_num_array[]);
 
 void generate_and_save_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
 
-void reconsturct_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
+void load_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
 
 //------------------------------------------------
 #endif
