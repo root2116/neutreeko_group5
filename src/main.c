@@ -32,7 +32,7 @@ int main(int argc,char *argv[]){
     // show_graph(dict,inv_graph_table,50);
     //edge_num_table
     
-    edge_num_count(dict, inv_graph_table,edge_num_array);
+    edge_num_count(dict, graph_table,edge_num_array);
 
     // printf("%d\n",edge_num_array[0]);
 
