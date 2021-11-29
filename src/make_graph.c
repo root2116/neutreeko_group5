@@ -132,7 +132,7 @@ unsigned int* generate_next_state_ids(unsigned int state_id){
     int board[5][5] = {};
     // int next_board[5][5] = {};
 
-    unsigned int *next_state_ids = malloc(sizeof(int)*DATA_LENGTH);
+    unsigned int *next_state_ids = (unsigned int*)malloc(sizeof(int)*DATA_LENGTH);
     
     //初期化
     for(int i = 0; i < DATA_LENGTH; i++){
@@ -307,7 +307,7 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
             }
         }    
     }
-    int *end_index = malloc(sizeof(int)*SIZE);
+    int *end_index = (int*)malloc(sizeof(int)*SIZE);
     unsigned int from_key;
     int to_index;
     for (int i = 0; i < SIZE; i += 1){
@@ -367,7 +367,7 @@ void save_int_array(unsigned int array[], char* file_path){
 void reconstruct_hash_table_from_file(DataItem **table, char* file_path){
     FILE *fpr = fopen(file_path,"rb");
 
-    DataItem *data_item = calloc(SIZE,sizeof(DataItem));
+    DataItem *data_item = (DataItem*)calloc(SIZE,sizeof(DataItem));
 
     for(int i = 0; i < STATE_NUM; i++){
         

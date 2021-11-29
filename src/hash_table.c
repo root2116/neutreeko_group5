@@ -51,7 +51,7 @@ int hash_insert(DataItem **table, unsigned int key, unsigned int data)
         return (-1);
     }
 
-    p = malloc(sizeof(DataItem));
+    p = (DataItem*)malloc(sizeof(DataItem));
 
     if (p == NULL)
     {
