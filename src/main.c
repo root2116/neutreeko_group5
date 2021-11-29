@@ -11,13 +11,17 @@
 
 unsigned int graph_table[SIZE][DATA_LENGTH];
 unsigned int inv_graph_table[SIZE][DATA_LENGTH];
-unsigned int condition_array[SIZE];
-unsigned int edge_num_array[SIZE];
-unsigned int best_array[SIZE];
+unsigned int condition_array[SIZE] = {};
+unsigned int edge_num_array[SIZE] = {};
+unsigned int best_array[SIZE] = {};
 DataItem *dict[SIZE];
-unsigned int inv_dict[SIZE];
+unsigned int inv_dict[SIZE] = {};
+
+reset(graph_table);
+reset(inv_graph_table);
 
 int main(int argc,char *argv[]){
+    
 
     
 

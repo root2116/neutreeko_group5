@@ -453,3 +453,12 @@ void reconsturct_set(DataItem **dict, unsigned int inv_dict[], unsigned int grap
 
     printf("Done!\n");
 }   
+
+void reset(unsigned int graph_table[SIZE][DATA_LENGTH]){
+    int i, j;
+    for (i = 0; i < SIZE; i += 1){
+        for (j = 0; j < DATA_LENGTH; j += 1){
+            graph_table[i][j] = 0;
+        }
+    }
+}
