@@ -462,3 +462,14 @@ void reset(unsigned int graph_table[SIZE][DATA_LENGTH]){
         }
     }
 }
+
+void show_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGTH], int c){
+    int i,j;
+    printf("show graph below\n");
+    for (i = 0; i < c; i += 1){
+        for (j = 0; j < DATA_LENGTH; j += 1){
+            printf("%u ", graph_table[i][j]);
+        }
+        printf("\n");
+    }
+}
