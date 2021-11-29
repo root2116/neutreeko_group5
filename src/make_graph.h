@@ -11,7 +11,12 @@
 #define END 0
 #define BLACK_INIT_STATE_ID 679486132
 #define WHITE_INIT_STATE_ID 2826969780
-
+#define DICT_PATH "../data/dict.dat"
+#define INV_DICT_PATH "../data/inv_dict.dat"
+#define GRAPH_TABLE_PATH "../data/graph_table.dat"
+#define INV_GRAPH_TABLE_PATH "../data/inv_graph_table.dat"
+#define CONDITION_ARRAY_PATH "../data/condition_array.dat"
+#define BEST_ARRAY "../data/best_array.dat"
 
 //------------------------------------------------
 //  型定義(Type definition)

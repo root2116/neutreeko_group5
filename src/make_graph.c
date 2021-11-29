@@ -429,11 +429,11 @@ void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int
 
     printf("Saving set...\n");
     
-    save_hash_table(dict,"dict.dat");
-    save_int_array(inv_dict,"int_dict.dat");
-    save_int_table(graph_table, "graph_table.dat");
-    save_int_table(inv_graph_table, "inv_graph_table.dat");
-    save_int_array(condition_array, "condition_array.dat");
+    save_hash_table(dict,DICT_PATH);
+    save_int_array(inv_dict,INV_DICT_PATH);
+    save_int_table(graph_table,GRAPH_TABLE_PATH);
+    save_int_table(inv_graph_table, INV_GRAPH_TABLE_PATH);
+    save_int_array(condition_array, CONDITION_ARRAY_PATH);
 
     printf("Saved!\n");
 }
@@ -442,11 +442,11 @@ void reconsturct_set(DataItem **dict, unsigned int inv_dict[], unsigned int grap
 
     printf("Reconstructing set...\n");
 
-    reconstruct_hash_table_from_file(dict,"dict.dat");
-    reconstruct_int_array_from_file(inv_dict,"inv_dict.dat");
-    reconstruct_int_table_from_file(graph_table,"graph_table.dat");
-    reconstruct_int_table_from_file(inv_graph_table,"inv_graph_table.dat");
-    reconstruct_int_array_from_file(condition_array,"condition_array.dat");
+    reconstruct_hash_table_from_file(dict,DICT_PATH);
+    reconstruct_int_array_from_file(inv_dict,INV_DICT_PATH);
+    reconstruct_int_table_from_file(graph_table,GRAPH_TABLE_PATH);
+    reconstruct_int_table_from_file(inv_graph_table,INV_GRAPH_TABLE_PATH);
+    reconstruct_int_array_from_file(condition_array,CONDITION_ARRAY_PATH);
 
     printf("Done!\n");
 }   
