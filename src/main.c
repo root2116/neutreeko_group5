@@ -25,10 +25,9 @@ int main(int argc,char *argv[]){
 
     //テスト----------------------------------------------------------------
 
-    
 
-    generate_and_save_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
-    // reconsturct_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
+    // generate_and_save_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
+    load_set(dict,inv_dict,graph_table,inv_graph_table,condition_array);
     
     //edge_num_table
     
