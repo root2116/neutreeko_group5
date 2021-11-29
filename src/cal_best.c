@@ -1,5 +1,7 @@
 #include "cal_best.h"
 #include "hash_table.h"
+#include "make_graph.h"
+#include "game.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -168,3 +170,42 @@ void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsign
         }
     }
 }
+
+
+void convert_best_array(DataItem **dict,unsigned int best_array[], short int best_move_array[]){
+    int current_id,best_id;
+    int current_board[5][5], best_board[5][5];
+    short int start_int, end_int, move_int;
+    for(int index = 0; index < SIZE; index++){
+        start_int = 0;
+        end_int = 0;
+        current_id = hash_search(dict,index);
+        best_id = best_array[index];
+        
+        decode_state_id(current_id,current_board);
+        decode_state_id(best_id, best_board);
+
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                //手の始点をさがす
+                if(best_board[i][j] == EMPTY && (current_board[i][j] != best_board[i][j])){
+                    start_int = (5-i) * 10 + j;
+                }
+
+                //手の終点をさがす
+                if(current_board[i][j] == EMPTY && (current_board[i][j] != best_board[i][j])){
+                    end_int = (5-i) * 10 + j;
+                }
+            }
+        }
+
+        move_int = start_int * 100 + end_int;
+
+        best_move_array[index] = move_int;
+        
+    }
+}
+
+
+
+
