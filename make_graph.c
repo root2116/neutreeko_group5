@@ -196,7 +196,7 @@ void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]){
     int judge_of_black;
 
 
-    printf("makeing dictionary...\n");
+    printf("Making the dictionary...\n");
    
     for(w1 = 0; w1 < 25; w1++){
         for(w2 = w1 + 1; w2 < 25; w2++){
@@ -492,10 +492,10 @@ void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int
 
     make_graph(dict,inv_dict,graph_table, inv_graph_table,condition_array);
 
-    printf("Saving...\n");
+    printf("Saving set...\n");
     
     save_hash_table(dict,"dict.dat");
-    save_int_array(int_dict,"int_dict.dat");
+    save_int_array(inv_dict,"int_dict.dat");
     save_int_table(graph_table, "graph_table.dat");
     save_int_table(inv_graph_table, "inv_graph_table.dat");
     save_int_array(condition_array, "condition_array.dat");
