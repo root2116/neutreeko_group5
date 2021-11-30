@@ -58,9 +58,9 @@ void update_turn(int *turn, int *turn_count);
 
 void display_board(int board[5][5]);
 
-void start_game(int turn);
+void start_game(int init_turn, DataItem **dict,short int best_move_array[]);
 
-char *game_ai(DataItem **dict, short int best_move_array[], int board[][5], int turn);
+void game_ai(DataItem **dict,short int best_move_array[], int board[][5], int turn, char* best_move);
 
 void convert_move_int_into_move_string(short int move_int, char move[4]);
 //------------------------------------------------

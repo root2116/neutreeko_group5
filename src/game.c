@@ -2,6 +2,7 @@
 
 #include "game.h"
 #include "utility.h"
+#include "hash_table.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -290,7 +291,7 @@ void display_board(int board[5][5])
 }
 
 
-void start_game(int init_turn){
+void start_game(int init_turn, DataItem **dict,short int best_move_array[]){
 
     int board[5][5] = {
         {0, 2, 0, 2, 0},
@@ -318,8 +319,14 @@ void start_game(int init_turn){
             printf("Draw");
             break;
         }
+        if(turn == user_num){
+            scanf("%s", input);
+        }else{
+            game_ai(dict,best_move_array,board,turn,input);
+            printf("%s\n",input);
+        }
 
-        scanf("%s", input);
+        
         parser(input, &move);
 
         if (move_piece(board, move, turn))
@@ -347,9 +354,9 @@ void start_game(int init_turn){
     }
 }
 
-char* game_ai(DataItem **dict,short int best_move_array[], int board[][5], int turn){
+void game_ai(DataItem **dict,short int best_move_array[], int board[][5], int turn, char* best_move){
 
-    char *best_move = (char*)malloc(sizeof(char)*5);
+    
 
     int state_id = encode_board(board,turn);
 
@@ -363,7 +370,7 @@ char* game_ai(DataItem **dict,short int best_move_array[], int board[][5], int t
     
     convert_move_int_into_move_string(best_move_int,best_move);
 
-    return best_move;
+  
 
 
 }
