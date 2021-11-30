@@ -316,7 +316,7 @@ void start_game(int init_turn, DataItem **dict,short int best_move_array[]){
 
         if (turn_count > 300)
         {
-            printf("Draw");
+            printf("Draw\n");
             break;
         }
         if(turn == user_num){
@@ -336,12 +336,12 @@ void start_game(int init_turn, DataItem **dict,short int best_move_array[]){
 
             if (judge(board) == turn && user_num == turn)
             {
-                printf("You Win");
+                printf("You Win\n");
                 break;
             }
             else if (judge(board) == turn && user_num != turn)
             {
-                printf("You Lose");
+                printf("You Lose\n");
                 break;
             }
             update_turn(&turn, &turn_count);
