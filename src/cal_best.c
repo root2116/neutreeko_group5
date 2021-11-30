@@ -1,7 +1,6 @@
 #include "cal_best.h"
 #include "hash_table.h"
-#include "make_graph.h"
-#include "game.h"
+#include "utility.h"
 
 #include <stdio.h>
 #include <stdlib.h>

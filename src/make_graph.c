@@ -2,93 +2,10 @@
 #include "make_graph.h"
 #include "hash_table.h"
 #include "game.h"
-
+#include "utility.h"
+#include "file_io.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-// long int to_int(int **board_array){
-//     long int board_num = 0;
-
-//     for(int i = 0; i < 6; i++){
-//         board_num += *board_array[i];
-//         board_num *= 100;
-//     }
-
-//     return board_num;
-// }
-
-void generate_board_from_array(int board[5][5], int **board_num_array){
-    
-    for(int i = 0; i < 5; i++){
-        for(int j = 0; j < 5; j++){
-            board[i][j] = 0;
-        }
-    }
-
-    int x,y;
-    for(int i = 0; i < 6; i++){
-        x = *board_num_array[i] % 5;
-        y = *board_num_array[i] / 5;
-        if(i < 3){
-            board[y][x] = WHITE;
-        }else{
-            board[y][x] = BLACK;
-        }
-        
-    }   
-}
-
-int get_color_from_state_id(unsigned int state_id) {
-  int turn = state_id >> 31;
-  return turn+1;
-}
-
-unsigned int encode_board(int board[][5], int turn) {
-  int komacount = 0;
-  unsigned int board_id;
-  int sub_id1 = 0;
-  int sub_id2 = 0;
-  
-  /*盤面に対して別々にエンコード*/
-  for (int i = 0; i < 5; i++) {
-    for (int j = 0; j < 5; j++) {
-      if (board[i][j] == 1) {
-        sub_id1 += 1 << (24 - (5 * i + j));
-        komacount++;
-      }
-      else if (board[i][j] == 2) {
-        sub_id1 += 1 << (24 - (5 * i + j));
-        sub_id2 += 1 << (5 - komacount);
-        komacount++;
-      } else {}
-    }
-  }
-  
-  board_id = ((turn - 1)<< 31) + sub_id1 * 64 + sub_id2;
-  return board_id;
-}
-
-
-void decode_state_id(unsigned int board_id, int board[][5]) {
-  /*sub_id2が黒白の順番、sub_id1が駒のあるなし*/
-  int sub_id2 = board_id % 64;
-  int sub_id1 = board_id / 64;
-
-  for (int i = 24; i >= 0; i--) {
-    if ((sub_id1 % 2) == 1) {
-      if ((sub_id2 % 2) == 0) {
-        board[(i / 5)][(i % 5)] = 1;
-      } else {
-        board[(i / 5)][(i % 5)] = 2;
-      }
-      sub_id2 /= 2;
-    }else{
-        board[(i / 5)][(i % 5)] = 0;
-    }
-    sub_id1 /= 2;
-  }
-  return;
-}
 
 
 unsigned int relative_move(int board[5][5], Point cur, Vector move_vec, int turn){
@@ -327,88 +244,13 @@ void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigne
     printf("\nDone!\n");    
 }
 
-void save_hash_table(DataItem **table,char* file_path){
-    FILE *fpw = fopen(file_path,"wb");
-
-    for(int i = 0; i < SIZE; i++){
-        if(table[i] == NULL) continue;
-
-        recursive_save(table[i],fpw);
-    }
-
-
-    fclose(fpw);
-
-}
-void recursive_save(DataItem *data_item, FILE *fpw){
-    if(data_item->next == NULL){
-        fwrite(data_item,sizeof(DataItem),1,fpw);
-
-    }else{
-        fwrite(data_item,sizeof(DataItem),1,fpw);
-        recursive_save(data_item->next,fpw);
-    }
-}   
-
-void save_int_table(unsigned int table[][DATA_LENGTH], char* file_path){
-    FILE *fpw = fopen(file_path, "wb");
-
-    fwrite(table,sizeof(int),SIZE*DATA_LENGTH,fpw);
-    
-    fclose(fpw);
-}
-
-void save_int_array(unsigned int array[], char* file_path){
-    FILE *fpw = fopen(file_path, "wb");
-
-    fwrite(array,sizeof(int),SIZE, fpw);
-    
-    fclose(fpw);
-}
-
-void load_hash_table_from_file(DataItem **table, char* file_path){
-    FILE *fpr = fopen(file_path,"rb");
-
-    DataItem *data_item = (DataItem*)calloc(SIZE,sizeof(DataItem));
-
-    for(int i = 0; i < STATE_NUM; i++){
-        
-        fread(&data_item[i], sizeof(DataItem), 1, fpr);
-        if(data_item[i].key == 0){
-            break;
-        }
-        hash_insert(table,data_item[i].key,data_item[i].data);
-    }
-
-    free(data_item);
-
-    fclose(fpr);
-
-}
-
-void load_int_table_from_file(unsigned int table[][DATA_LENGTH], char* file_path){
-    FILE *fpr = fopen(file_path, "rb");
-
-    fread(table,sizeof(int),SIZE*DATA_LENGTH,fpr);
-
-    fclose(fpr);
-}
-
-void load_int_array_from_file(unsigned int array[], char* file_path){
-    FILE *fpr = fopen(file_path, "rb");
-
-    fread(array, sizeof(int), SIZE, fpr);
-
-    fclose(fpr);
-}
-
-void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH], unsigned int edge_num_array[])
-{   
+void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH], unsigned int edge_num_array[]){
     printf("Counting edges...\n");
 
-    for(int i = 0; i < SIZE; i++){
-        for(int j = 0; j < DATA_LENGTH; j++){
-            if(inv_graph_table[i][j] == 0) break;
+    for (int i = 0; i < SIZE; i++){
+        for (int j = 0; j < DATA_LENGTH; j++){
+            if (inv_graph_table[i][j] == 0)
+                break;
 
             edge_num_array[i] += 1;
         }
@@ -416,8 +258,8 @@ void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH]
     printf("Done!\n");
 }
 
-
-void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH],unsigned int condition_array[] ){
+void generate_and_save_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[])
+{
 
     for (int i = 0; i < SIZE; i++)
     {
@@ -426,51 +268,32 @@ void generate_and_save_set(DataItem **dict,unsigned int inv_dict[], unsigned int
 
     hash_init(dict);
 
-    make_dictionary(dict,inv_dict);
+    make_dictionary(dict, inv_dict);
 
-    make_graph(dict,inv_dict,graph_table, inv_graph_table,condition_array);
+    make_graph(dict, inv_dict, graph_table, inv_graph_table, condition_array);
 
     printf("Saving set...\n");
-    
-    save_hash_table(dict,DICT_PATH);
-    save_int_array(inv_dict,INV_DICT_PATH);
-    save_int_table(graph_table,GRAPH_TABLE_PATH);
+
+    save_hash_table(dict, DICT_PATH);
+    save_int_array(inv_dict, INV_DICT_PATH);
+    save_int_table(graph_table, GRAPH_TABLE_PATH);
     save_int_table(inv_graph_table, INV_GRAPH_TABLE_PATH);
     save_int_array(condition_array, CONDITION_ARRAY_PATH);
 
     printf("Saved!\n");
 }
 
-void load_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]){
+void load_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[])
+{
 
     printf("Loading set...\n");
-    
+
     hash_init(dict);
-    load_hash_table_from_file(dict,DICT_PATH);
-    load_int_array_from_file(inv_dict,INV_DICT_PATH);
-    load_int_table_from_file(graph_table,GRAPH_TABLE_PATH);
-    load_int_table_from_file(inv_graph_table,INV_GRAPH_TABLE_PATH);
-    load_int_array_from_file(condition_array,CONDITION_ARRAY_PATH);
+    load_hash_table_from_file(dict, DICT_PATH);
+    load_int_array_from_file(inv_dict, INV_DICT_PATH);
+    load_int_table_from_file(graph_table, GRAPH_TABLE_PATH);
+    load_int_table_from_file(inv_graph_table, INV_GRAPH_TABLE_PATH);
+    load_int_array_from_file(condition_array, CONDITION_ARRAY_PATH);
 
     printf("Done!\n");
-}   
-
-void reset(unsigned int graph_table[SIZE][DATA_LENGTH]){
-    int i, j;
-    for (i = 0; i < SIZE; i += 1){
-        for (j = 0; j < DATA_LENGTH; j += 1){
-            graph_table[i][j] = 0;
-        }
-    }
-}
-
-void show_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGTH], int c){
-    int i,j;
-    printf("show graph below\n");
-    for (i = 0; i < c; i += 1){
-        for (j = 0; j < DATA_LENGTH; j += 1){
-            printf("%u ", graph_table[i][j]);
-        }
-        printf("\n");
-    }
 }

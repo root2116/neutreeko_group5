@@ -1,13 +1,15 @@
-#ifndef INCLUDED_CAL_BEST
-#define INCLUDED_CAL_BEST
+#ifndef INCLUDED_UTILITY
+#define INCLUDED_UTILITY
 //------------------------------------------------
 #include "hash_table.h"
+#include "game.h"
+#include <stdio.h>
 //------------------------------------------------
 //  マクロ定義(Macro definition)
 //------------------------------------------------
-#define WIN 2
-#define LOSE 0
-#define DRAW 1
+#define STATE_NUM 7081032
+#define END 0
+
 //------------------------------------------------
 //  型定義(Type definition)
 //------------------------------------------------
@@ -15,11 +17,17 @@
 //------------------------------------------------
 //  プロトタイプ宣言(Prototype declaration)
 //------------------------------------------------
+void generate_board_from_array(int board[5][5], int **board_num_array);
 
-void calculate_best(DataItem **dictionary, unsigned int inv_dictionary[], unsigned int graph_table[SIZE][DATA_LENGTH],
-                    unsigned int inv_graph_table[SIZE][DATA_LENGTH], unsigned int condition_array[SIZE],
-                    unsigned int edge_num_array[SIZE], unsigned int best_array[SIZE]);
+unsigned int encode_board(int board[][5], int turn);
 
-void convert_best_array(DataItem **dict, unsigned int best_array[], short int best_move_array[]);
+void decode_state_id(unsigned int board_id, int board[][5]);
+
+int get_color_from_state_id(unsigned int state_id);
+
+void init_table(unsigned int graph_table[SIZE][DATA_LENGTH]);
+
+void show_graph(DataItem **dictionary, unsigned int graph_table[SIZE][DATA_LENGTH], int c);
+
 //------------------------------------------------
 #endif

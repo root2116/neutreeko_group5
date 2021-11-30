@@ -1,7 +1,7 @@
 
 
 #include "game.h"
-#include "make_graph.h"
+#include "utility.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

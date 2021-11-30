@@ -3,6 +3,8 @@
 #include "make_graph.h"
 #include "cal_best.h"
 #include "game.h"
+#include "file_io.h"
+#include "utility.h"
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -20,8 +22,8 @@ unsigned int inv_dict[SIZE] = {};
 
 int main(int argc,char *argv[]){
 
-    reset(graph_table);
-    reset(inv_graph_table);
+    init_table(graph_table);
+    init_table(inv_graph_table);
 
     //テスト----------------------------------------------------------------
 
@@ -42,6 +44,15 @@ int main(int argc,char *argv[]){
     // cal_best
     calculate_best(dict,inv_dict,graph_table,inv_graph_table,condition_array,edge_num_array,best_array);
     printf("calculate_best finished\n");
+
+    printf("Converting best_array...\n");
+
+    short int *best_move_array = calloc(SIZE,sizeof(short int));
+
+    convert_best_array(dict,best_array,best_move_array);
+
+    save_short_array(best_move_array,BEST_MOVE_ARRAY_PATH);
+
 
     //-----------------------------------------------------------------------
 
