@@ -389,7 +389,10 @@ void calculate_best()
     //indexを走査することで全状態を走査
     for (int i = 0; i < STATE_NUM; i += 1)
     {
-        fprintf(stderr, "\r2 / 2 [%3d / 100]", ((i + 1) * 100 / STATE_NUM));
+        if(i % 100000 == 0){
+            fprintf(stderr, "\r2 / 2 [%3d / 100]", ((i + 1) * 100 / STATE_NUM));
+        }
+        
 
         now_id = inv_dict[i];
         now_index = hash_search(dict, now_id);
