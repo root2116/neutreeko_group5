@@ -3,14 +3,15 @@
 //------------------------------------------------
 #include "hash_table.h"
 #include "game.h"
+
 #include <stdio.h>
 //------------------------------------------------
 //  マクロ定義(Macro definition)
 //------------------------------------------------
-
-
-
-
+#define WIN 2
+#define LOSE 0
+#define DRAW 1
+#define MAX_FIXED 6871764
 
 //------------------------------------------------
 //  型定義(Type definition)
@@ -25,15 +26,22 @@ unsigned int relative_move(int board[5][5], Point cur, Vector move_vec, int turn
 
 unsigned int* generate_next_state_ids(unsigned int state_id);
 
-void make_dictionary(DataItem **dictionary, unsigned int inv_dictionary[SIZE]);
+void make_dictionary();
 
-void make_graph(DataItem **dictionary, unsigned int inv_dictionary[SIZE],unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
+void make_graph();
 
-void edge_num_count(DataItem **dict, unsigned int inv_graph_table[][DATA_LENGTH], unsigned int edge_num_array[]);
+void edge_num_count(unsigned int graph_table[][DATA_LENGTH]);
 
-void generate_and_save_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
+void calculate_best();
 
-void load_set(DataItem **dict, unsigned int inv_dict[], unsigned int graph_table[][DATA_LENGTH], unsigned int inv_graph_table[][DATA_LENGTH], unsigned int condition_array[]);
+void convert_best_array(short int best_move_array[]);
+
+void generate_and_save_set();
+
+void load_set();
+
+void generate_and_save_best_move_array();
+
 
 //------------------------------------------------
 #endif

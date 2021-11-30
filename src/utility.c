@@ -4,14 +4,14 @@
 #include <stdio.h>
 
 
-void init_table(unsigned int graph_table[SIZE][DATA_LENGTH])
+void init_table(unsigned int table[SIZE][DATA_LENGTH])
 {
     int i, j;
     for (i = 0; i < SIZE; i += 1)
     {
         for (j = 0; j < DATA_LENGTH; j += 1)
         {
-            graph_table[i][j] = 0;
+            table[i][j] = 0;
         }
     }
 }

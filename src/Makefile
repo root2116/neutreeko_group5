@@ -1,5 +1,5 @@
 CMD= main
-SRCS= main.c make_graph.c hash_table.c cal_best.c game.c file_io.c utility.c
+SRCS= main.c perfect_analysis.c hash_table.c game.c file_io.c utility.c
 OBJS= $(SRCS:.c=.o)
 
 CFLAGS+=-g
@@ -10,14 +10,11 @@ build: $(CMD)
 $(CMD): $(OBJS)
 	$(CC) $(CFLAGS) -o $(CMD) $(OBJS)
 
-main.o: main.c make_graph.o hash_table.o cal_best.o game.o
+main.o: main.c perfect_analysis.o hash_table.o game.o
 	$(CC) $(CFLAGS) -c main.c -o main.o
 
-make_graph.o: make_graph.c make_graph.h game.o hash_table.o utility.o
-	$(CC) $(CFLAGS) -c make_graph.c -o make_graph.o 
-
-cal_best.o: cal_best.c cal_best.h hash_table.o utility.o 
-	$(CC) $(CFLAGS) -c cal_best.c -o cal_best.o
+perfect_analysis.o: perfect_analysis.c perfect_analysis.h game.o hash_table.o utility.o
+	$(CC) $(CFLAGS) -c perfect_analysis.c -o perfect_analysis.o 
 
 game.o: game.c game.h hash_table.o utility.o
 	$(CC) $(CFLAGS) -c game.c -o game.o
