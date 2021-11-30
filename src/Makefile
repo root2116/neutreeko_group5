@@ -2,7 +2,7 @@ CMD= main
 SRCS= main.c perfect_analysis.c hash_table.c game.c file_io.c utility.c
 OBJS= $(SRCS:.c=.o)
 
-CFLAGS+=-g
+CFLAGS+=-O3
 CC := clang
 
 build: $(CMD)
