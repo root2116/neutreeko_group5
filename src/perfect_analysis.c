@@ -393,12 +393,13 @@ void calculate_best()
 
         now_id = inv_dict[i];
         now_index = hash_search(dict, now_id);
+    
 
         /*勝ち盤面なら遷移先の（相手目線の）負け盤面で決着手数の短いものに遷移*/
         if (condition_array[now_index] == WIN)
         {
             best_id = 0;
-            tmp_max_transition_to_end = SIZE;
+            tmp_max_transition_to_end = -SIZE;
             //遷移先の状態を確認
             for (int j = 0; j < DATA_LENGTH; j++)
             {
@@ -410,7 +411,7 @@ void calculate_best()
                 next_index = hash_search(dict, next_id);
                 if (condition_array[next_index] == LOSE)
                 { //遷移先が相手視点で負けなら・・・
-                    if (max_edges_to_end_table[next_index] < tmp_max_transition_to_end)
+                    if (max_edges_to_end_table[next_index] > tmp_max_transition_to_end)
                     {
                         tmp_max_transition_to_end = max_edges_to_end_table[next_index];
                         best_id = next_id;
@@ -423,7 +424,7 @@ void calculate_best()
         else if (condition_array[now_index] == LOSE)
         {
             best_id = 0;
-            tmp_max_transition_to_end = SIZE;
+            tmp_max_transition_to_end = -SIZE;
 
             for (int j = 0; j < DATA_LENGTH; j++)
             {
@@ -435,7 +436,7 @@ void calculate_best()
                 next_index = hash_search(dict, next_id);
                 if (condition_array[next_index] == WIN)
                 {
-                    if (max_edges_to_end_table[next_index] < tmp_max_transition_to_end)
+                    if (max_edges_to_end_table[next_index] > tmp_max_transition_to_end)
                     {
                         tmp_max_transition_to_end = max_edges_to_end_table[next_index];
                         best_id = next_id;
