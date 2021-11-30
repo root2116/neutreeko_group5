@@ -307,7 +307,7 @@ void start_game(int init_turn, DataItem **dict,short int best_move_array[]){
     int turn = 1;
     int turn_count = 1;
 
-    char input[5];
+    char input[5] = "0000";
 
     display_board(board);
 
@@ -376,7 +376,7 @@ void game_ai(DataItem **dict,short int best_move_array[], int board[][5], int tu
 }
 
 
-void convert_move_int_into_move_string(short int move_int, char move[4]){
+void convert_move_int_into_move_string(short int move_int, char move[5]){
     short int tmp = move_int;
 
     move[3] = 'A' + tmp % 10;
