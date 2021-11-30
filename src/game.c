@@ -309,7 +309,7 @@ void start_game(int init_turn, DataItem **dict,short int best_move_array[]){
 
     char input[5];
 
-    display_board(board);
+    // display_board(board);
 
     while (1)
     {
@@ -332,7 +332,7 @@ void start_game(int init_turn, DataItem **dict,short int best_move_array[]){
         if (move_piece(board, move, turn))
         {
 
-            display_board(board);
+            // display_board(board);
 
             if (judge(board) == turn && user_num == turn)
             {
@@ -348,8 +348,8 @@ void start_game(int init_turn, DataItem **dict,short int best_move_array[]){
         }
         else
         {
-            printf("Invalid move!!\n");
-            display_board(board);
+            // printf("Invalid move!!\n");
+            // display_board(board);
         }
     }
 }
