@@ -348,14 +348,14 @@ void start_game(int init_turn, DataItem **dict,short int best_move_array[]){
         }
         else
         {
-            if (judge(board) == turn && user_num == turn)
-            {
-                printf("You Win\n");
-                break;
-            }
-            else if (judge(board) == turn && user_num != turn)
+            if (user_num == turn)
             {
                 printf("You Lose\n");
+                break;
+            }
+            else if (user_num != turn)
+            {
+                printf("You Win\n");
                 break;
             }
 
