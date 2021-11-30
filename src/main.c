@@ -13,16 +13,16 @@
 int main(int argc,char *argv[]){
 
 
-    generate_and_save_best_move_array();
-    // short int *best_move_array = (short int*)calloc(SIZE,sizeof(short int));
+    // generate_and_save_best_move_array();
+    short int *best_move_array = (short int*)calloc(SIZE,sizeof(short int));
    
-    // load_short_array_from_file(best_move_array,BEST_MOVE_ARRAY_PATH);
+    load_short_array_from_file(best_move_array,BEST_MOVE_ARRAY_PATH);
 
-    // DataItem *dict = (DataItem *)calloc(SIZE, sizeof(DataItem));
+    DataItem *dict = (DataItem *)calloc(SIZE, sizeof(DataItem));
 
-    // load_hash_table_from_file((DataItem**)dict,DICT_PATH);
+    load_hash_table_from_file((DataItem**)dict,DICT_PATH);
 
-    // start_game(atoi(argv[1]),(DataItem**)dict,best_move_array);
+    start_game(atoi(argv[1]),(DataItem**)dict,best_move_array);
 
     return 0;
 }
