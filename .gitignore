@@ -8,5 +8,3 @@
 *.dat
 .DS_Store
 !Makefile
-!data/best_move_array.dat
-!data/dict.dat
