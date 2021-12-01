@@ -389,7 +389,10 @@ void calculate_best()
     //indexを走査することで全状態を走査
     for (int i = 0; i < STATE_NUM; i += 1)
     {
-        fprintf(stderr, "\r2 / 2 [%3d / 100]", ((i + 1) * 100 / STATE_NUM));
+        if(i % 100000 == 0){
+            fprintf(stderr, "\r2 / 2 [%3d / 100]", ((i + 1) * 100 / STATE_NUM));
+        }
+        
 
         now_id = inv_dict[i];
         now_index = hash_search(dict, now_id);
@@ -476,7 +479,9 @@ void calculate_best()
     free(fixed_index_array);
     free(new_fixed_index_array);
     free(max_edges_to_end_table);
-    
+
+    fprintf(stderr, "\r2 / 2 [100 / 100]");
+
     printf("\nDone!\n");
 }
 
@@ -589,7 +594,50 @@ void generate_and_save_best_move_array()
 
 }
 
+void init_set(){
 
+    for (int i = 0; i < SIZE; i++)
+    {
+        condition_array[i] = 1;
+    }
+
+
+    hash_init(dict);
+    init_table(graph_table);
+    init_table(inv_graph_table);
+
+
+}
+
+
+
+void prepare_for_game(){
+
+    printf("Initializing set...\n");
+    init_set();
+
+    make_dictionary();
+
+    make_graph();
+
+    edge_num_count(graph_table);
+
+    calculate_best();
+
+    printf("Converting best_array...\n");
+
+    short int *best_move_array = calloc(SIZE, sizeof(short int));
+
+    convert_best_array(best_move_array);
+
+    printf("Saving a best move array and the dictionary...\n");
+
+    save_short_array(best_move_array, BEST_MOVE_ARRAY_PATH);
+    save_hash_table(dict, DICT_PATH);
+
+
+    printf("Saved!\n");
+}
 
 
 
