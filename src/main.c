@@ -2,20 +2,12 @@
 #include "hash_table.h"
 #include "game.h"
 #include "file_io.h"
-
-
 #include<stdio.h>
 #include<stdlib.h>
 
 
 
 int main(int argc,char *argv[]){
-    // 一回目の実行でアンコメントする
-    // generate_and_save_set(); 
-
-    // 二回目の実行でアンコメントする
-    // generate_and_save_best_move_array();
-    
     
     short int *best_move_array = (short int*)calloc(SIZE,sizeof(short int));
    
