@@ -5,15 +5,23 @@ OBJS= $(SRCS:.c=.o)
 CFLAGS+=-O3
 CC := clang
 
-build: $(CMD)
+build: $(CMD) preparation
+
 
 $(CMD): $(OBJS)
 	$(CC) $(CFLAGS) -o $(CMD) $(OBJS)
 
-main.o: main.c perfect_analysis.o hash_table.o game.o
+main.o: main.c hash_table.o game.o
 	$(CC) $(CFLAGS) -c main.c -o main.o
 
-perfect_analysis.o: perfect_analysis.c perfect_analysis.h game.o hash_table.o utility.o
+preparation.o: preparation.c perfect_analysis.o 
+	$(CC) $(CFLAGS) -c preparation.c -o preparation.o
+
+preparation: preparation.o perfect_analysis.o hash_table.o game.o file_io.o utility.o
+	$(CC) $(CFLAGS) -o preparation preparation.o perfect_analysis.o hash_table.o game.o file_io.o utility.o
+
+
+perfect_analysis.o: perfect_analysis.c perfect_analysis.h game.o hash_table.o utility.o file_io.o
 	$(CC) $(CFLAGS) -c perfect_analysis.c -o perfect_analysis.o 
 
 game.o: game.c game.h hash_table.o utility.o

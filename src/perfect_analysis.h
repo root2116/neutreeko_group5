@@ -42,6 +42,7 @@ void load_set();
 
 void generate_and_save_best_move_array();
 
+void prepare_for_game();
 
 //------------------------------------------------
 #endif
