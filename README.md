@@ -5,7 +5,7 @@
 git clone https://github.com/root2116/neutreeko_group5.git
 cd neutreeko_group5/src
 make build
-./prepartion
+./preparation
 ```
 ### Excecution
 ```
